@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.or.bit.action.Action;
 import kr.or.bit.action.ActionForward;
-import kr.or.bit.service.*;
+import kr.or.bit.service.board.BoardListService;
 
 /**
  * 모든 *.do 요청을 중앙에서 가로채 교통정리하는 대문 서블릿(Front Controller)입니다.
@@ -30,7 +30,7 @@ public class BoardController extends HttpServlet {
 
         // 1. 게시글 목록 조회
         if (urlCommand.equals("/BoardList.do")) {
-            action = new BoardService();
+            action = new BoardListService();
             forward = action.execute(request, response);
         }
         // 2. 원글 쓰기 화면으로 이동 (단순 이동)
