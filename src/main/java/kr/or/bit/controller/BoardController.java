@@ -52,6 +52,18 @@ public class BoardController extends HttpServlet {
             forward.setRedirect(false);
             forward.setPath("/WEB-INF/views/board/board_delete.jsp");
         }
+        // 8. 지하철 최단경로 조회 페이지 이동
+        else if (urlCommand.equals("/Subway.do")) {
+            forward = new ActionForward();
+            forward.setRedirect(false);
+            forward.setPath("/WEB-INF/views/subway/subway.jsp");
+        }
+        // 9. 오늘의 날씨 조회 페이지 이동
+        else if (urlCommand.equals("/Weather.do")) {
+            forward = new ActionForward();
+            forward.setRedirect(false);
+            forward.setPath("/WEB-INF/views/weather/weather.jsp");
+        }
 
         // 공통 페이지 이동 처리
         if (forward != null) {
