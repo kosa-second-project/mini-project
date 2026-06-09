@@ -12,10 +12,12 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class Reply {
     private int no;
-    private String writer;
-    private String userid;
-    private String pwd;
+    private int empno;
     private String content;
     private Date writedate;
     private int idx_fk;
+    private int refer;
+    private int depth;
+    private int step;
+    private boolean deleted;
 }
