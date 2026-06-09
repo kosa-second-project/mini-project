@@ -32,5 +32,6 @@ function onWeatherClick() {
  * 최단경로 조회 클릭 이벤트 핸들러
  */
 function onPathClick() {
-    alert("최단경로 조회 기능 준비 중...");
+    var path = (window.contextPath || "") + "/Subway.do";
+    location.href = path;
 }

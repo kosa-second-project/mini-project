@@ -5,6 +5,9 @@
   디자인(CSS)과 스크립트(JS)가 분리된 정석 구조의 JSP 컴포넌트입니다.
 -->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/style/quickMenu.css">
+<script>
+    window.contextPath = "${pageContext.request.contextPath}";
+</script>
 <script src="${pageContext.request.contextPath}/js/quickMenu.js" defer></script>
 
 <div class="quick-menu-wrapper" id="quickMenuWrapper">
