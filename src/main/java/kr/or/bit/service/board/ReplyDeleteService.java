@@ -1,0 +1,32 @@
+package kr.or.bit.service.board;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import kr.or.bit.action.Action;
+import kr.or.bit.action.ActionForward;
+import kr.or.bit.dao.ReplyDao;
+
+public class ReplyDeleteService implements Action {
+    private static final int LOGIN_EMPNO = 1060;
+
+    @Override
+    public ActionForward execute(HttpServletRequest request, HttpServletResponse response) {
+        ActionForward forward = new ActionForward();
+
+        try {
+            int no = Integer.parseInt(request.getParameter("no"));
+            int idx_fk = Integer.parseInt(request.getParameter("idx_fk"));
+
+            ReplyDao dao = new ReplyDao();
+            dao.delete(no, LOGIN_EMPNO);
+
+            forward.setRedirect(true);
+            forward.setPath("BoardDetail.do?idx=" + idx_fk);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return forward;
+    }
+}

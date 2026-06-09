@@ -12,17 +12,15 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class Board {
     private int idx;
-    private String writer;
-    private String pwd;
+    private int empno;
     private String subject;
     private String content;
     private Date writedate;
     private int readnum;
-    private String filename;
-    private int filesize;
-    private String homepage;
-    private String email;
     private int refer;
     private int depth;
     private int step;
+    private boolean deleted;
+    private float lat; // 위도
+    private float lng; // 경도
 }
