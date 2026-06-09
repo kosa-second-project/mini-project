@@ -1,0 +1,169 @@
+/* 
+  공통 퀵메뉴 (토글 플로팅 버튼) 스타일시트
+  Glassmorphism 및 미니멀리즘 인터페이스 디자인 적용
+*/
+
+.quick-menu-wrapper {
+    position: fixed;
+    right: 35px;
+    bottom: 35px;
+    z-index: 9999;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* 메인 토글 버튼 */
+.quick-menu-trigger {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #0f172a; /* Slate 900 - Premium Dark Color */
+    color: #ffffff;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.3), 0 4px 12px -2px rgba(15, 23, 42, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* 플러스 모양의 선을 자바스크립트 없이 애니메이션하기 위한 내부 span 구성 */
+.quick-menu-trigger .trigger-icon {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.quick-menu-trigger .trigger-icon::before,
+.quick-menu-trigger .trigger-icon::after {
+    content: '';
+    position: absolute;
+    background-color: currentColor;
+    transition: transform 0.3s ease;
+}
+
+/* 가로선 */
+.quick-menu-trigger .trigger-icon::before {
+    top: 9px;
+    left: 0;
+    width: 20px;
+    height: 2px;
+}
+
+/* 세로선 */
+.quick-menu-trigger .trigger-icon::after {
+    top: 0;
+    left: 9px;
+    width: 2px;
+    height: 20px;
+}
+
+/* 마우스 호버 시 효과 */
+.quick-menu-trigger:hover {
+    transform: translateY(-2px) scale(1.03);
+    background: #1e293b; /* Slate 800 */
+    box-shadow: 0 14px 35px -5px rgba(15, 23, 42, 0.4), 0 6px 16px -2px rgba(15, 23, 42, 0.2);
+}
+
+.quick-menu-trigger:active {
+    transform: translateY(0) scale(0.97);
+}
+
+/* 활성화 상태 (플러스가 회전하여 엑스로 변경) */
+.quick-menu-wrapper.active .quick-menu-trigger {
+    background: #ef4444; /* Red 500 */
+    box-shadow: 0 10px 25px -5px rgba(239, 68, 68, 0.4);
+}
+
+.quick-menu-wrapper.active .quick-menu-trigger .trigger-icon {
+    transform: rotate(135deg);
+}
+
+/* 서브 메뉴 리스트 */
+.quick-menu-list {
+    position: absolute;
+    bottom: 70px;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* 활성화 시 서브 메뉴 리스트 등장 */
+.quick-menu-wrapper.active .quick-menu-list {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+/* 서브 메뉴 개별 항목 그룹 */
+.quick-menu-item-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 텍스트 라벨 (왼쪽에 뜨는 말풍선 설명) */
+.quick-menu-label {
+    opacity: 0;
+    transform: translateX(10px);
+    transition: all 0.25s cubic-bezier(0.19, 1, 0.22, 1);
+    background: rgba(15, 23, 42, 0.85);
+    color: #ffffff;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    pointer-events: none;
+}
+
+/* 메뉴에 마우스 올리면 설명이 옆에 부드럽게 나타남 */
+.quick-menu-item-wrapper:hover .quick-menu-label {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* 서브 동그라미 버튼 (Premium Glassmorphism + Border) */
+.quick-menu-item {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.19, 1, 0.22, 1);
+    font-size: 18px;
+    text-decoration: none;
+    color: #0f172a;
+}
+
+.quick-menu-item:hover {
+    background: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+    border-color: rgba(79, 70, 229, 0.3);
+}
+
+.quick-menu-item:active {
+    transform: translateY(0) scale(0.95);
+}
