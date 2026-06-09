@@ -25,7 +25,8 @@ document.addEventListener("DOMContentLoaded", function() {
  * 오늘의 날씨 클릭 이벤트 핸들러
  */
 function onWeatherClick() {
-    alert("오늘의 날씨 조회 기능 준비 중...");
+    var path = (window.contextPath || "") + "/Weather.do";
+    location.href = path;
 }
 
 /**
