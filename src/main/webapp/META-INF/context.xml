@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+    <Resource name="jdbc/oracle"
+              auth="Container"
+              type="javax.sql.DataSource"
+              driverClassName="oracle.jdbc.OracleDriver"
+              url="jdbc:oracle:thin:@//192.168.2.43:1521/XEPDB1"
+              username="KOSA"
+              password="0000"
+              maxTotal="20"
+              maxIdle="10"
+              maxWaitMillis="10000" />
+</Context>

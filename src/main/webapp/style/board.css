@@ -1,0 +1,255 @@
+.board-page {
+    max-width: 920px;
+    margin: 40px auto;
+    padding: 0 20px;
+    color: #222;
+    font-family: Arial, "Malgun Gothic", sans-serif;
+}
+
+.board-page.narrow {
+    max-width: 560px;
+}
+
+.board-form {
+    display: grid;
+    gap: 16px;
+}
+
+.board-form label {
+    display: grid;
+    gap: 6px;
+    font-weight: 700;
+}
+
+.board-form input,
+.board-form textarea {
+    box-sizing: border-box;
+    width: 100%;
+    border: 1px solid #cfd6df;
+    border-radius: 6px;
+    padding: 10px 12px;
+    font: inherit;
+}
+
+.board-form textarea,
+.content {
+    line-height: 1.6;
+}
+
+.inline {
+    display: inline-flex !important;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 8px !important;
+}
+
+.inline input {
+    width: auto;
+}
+
+.map-tools,
+.map-section,
+.comment-section {
+    margin-top: 16px;
+}
+
+.map-toggle-btn {
+    border: 1px solid #26384d;
+    border-radius: 6px;
+    background: #fff;
+    color: #26384d;
+    padding: 9px 14px;
+    font: inherit;
+    cursor: pointer;
+}
+
+#mapPanel.map-panel {
+    display: block;
+    margin-top: 10px;
+}
+
+.map-box {
+    width: 100%;
+    min-height: 360px;
+    border: 1px solid #cfd6df;
+    border-radius: 6px;
+}
+
+.place-search-form {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.place-search-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+}
+
+.place-search-form label {
+    font-weight: 700;
+}
+
+.place-search-form input {
+    box-sizing: border-box;
+    width: 100%;
+    border-radius: 6px;
+    border: 1px solid #cfd6df;
+    padding: 10px;
+    font: inherit;
+}
+
+.place-search-form button {
+    border: 1px solid #26384d;
+    border-radius: 6px;
+    background: #26384d;
+    color: #fff;
+    padding: 9px 14px;
+    font: inherit;
+    cursor: pointer;
+}
+
+.place-results {
+    display: grid;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    max-height: 180px;
+    overflow: auto;
+}
+
+.place-result-item {
+    display: grid;
+    gap: 4px;
+    border: 1px solid #d8dee6;
+    border-radius: 6px;
+    background: #fff;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.place-result-item span {
+    color: #657386;
+    font-size: 13px;
+}
+
+.map-info-window {
+    padding: 5px;
+    font-size: 13px;
+}
+
+.hidden {
+    display: none;
+}
+
+#mapPanel.hidden {
+    display: none;
+}
+
+@media (max-width: 760px) {
+    .map-panel {
+        grid-template-columns: 1fr;
+    }
+
+    .map-menu {
+        min-height: 240px;
+        max-height: 240px;
+    }
+}
+
+.muted,
+.meta {
+    color: #657386;
+    font-size: 14px;
+}
+
+.meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.content {
+    min-height: 180px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    border-top: 1px solid #e6ebf1;
+    border-bottom: 1px solid #e6ebf1;
+    padding: 20px 0;
+    font-family: inherit;
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.actions a,
+.actions button {
+    border: 1px solid #26384d;
+    border-radius: 6px;
+    background: #26384d;
+    color: #fff;
+    padding: 9px 14px;
+    font: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.actions a {
+    background: #fff;
+    color: #26384d;
+}
+
+.error {
+    color: #b3261e;
+    font-weight: 700;
+}
+
+.modal-toggle {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.modal-toggle:not(:checked) + .modal-backdrop {
+    display: none;
+}
+
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: grid;
+    place-items: center;
+    background: rgba(0, 0, 0, 0.45);
+    padding: 20px;
+}
+
+.modal-box {
+    width: min(420px, 100%);
+    border-radius: 8px;
+    background: #fff;
+    padding: 24px;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.24);
+}
+
+.modal-box h2 {
+    margin: 0 0 10px;
+}
+
+.modal-close {
+    display: inline-block;
+    margin-top: 18px;
+    border: 1px solid #26384d;
+    border-radius: 6px;
+    background: #26384d;
+    color: #fff;
+    padding: 9px 14px;
+    cursor: pointer;
+}

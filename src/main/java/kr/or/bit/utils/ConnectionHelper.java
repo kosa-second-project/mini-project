@@ -23,7 +23,7 @@ public class ConnectionHelper {
 			    Class.forName("oracle.jdbc.driver.OracleDriver");
 				switch (dbType) {
 					case ORACLE: 
-					        conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/XEPDB1","KOSA","1004");
+					        conn = DriverManager.getConnection("jdbc:oracle:thin:@//192.168.2.43:1521/XEPDB1","KOSA","0000");
 							break;
 					case MARIADB: 
 					        conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/sampledb","KOSA","1004");
@@ -44,7 +44,7 @@ public class ConnectionHelper {
 		try {
 				switch (dbType) {
 					case ORACLE: 
-					        conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/XEPDB1",id,pwd);
+					        conn = DriverManager.getConnection("jdbc:oracle:thin:@//192.168.2.43:1521/XEPDB1",id,pwd);
 							break;
 					case MARIADB: 
 					        conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/sampledb",id,pwd);
@@ -53,7 +53,6 @@ public class ConnectionHelper {
 		} catch (Exception e) {
 			 System.out.println("connection Factory : " + e.getMessage());
 		}
-		
 		
 		return conn;
 	}
