@@ -102,11 +102,12 @@ public class ReplyDao {
 
             String sql = "update reply "
                        + "set content = ? "
-                       + "where no = ? and deleted = 0";
+                       + "where no = ? and empno = ? and deleted = 0";
 
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, reply.getContent());
             pstmt.setInt(2, reply.getNo());
+            pstmt.setInt(3, reply.getEmpno());
 
             row = pstmt.executeUpdate();
 
@@ -120,7 +121,7 @@ public class ReplyDao {
         return row;
     }
 
-    public int delete(int no) {
+    public int delete(int no, int empno) {
         Connection conn = null;
         PreparedStatement pstmt = null;
         int row = 0;
@@ -128,9 +129,10 @@ public class ReplyDao {
         try {
             conn = ConnectionHelper.getConnection(DBType.ORACLE);
 
-            String sql = "update reply set deleted = 1 where no = ?";
+            String sql = "update reply set deleted = 1 where no = ? and empno = ?";
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, no);
+            pstmt.setInt(2, empno);
 
             row = pstmt.executeUpdate();
 

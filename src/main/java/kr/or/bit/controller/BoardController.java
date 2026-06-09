@@ -9,7 +9,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.or.bit.action.Action;
 import kr.or.bit.action.ActionForward;
+import kr.or.bit.service.board.BoardDetailService;
 import kr.or.bit.service.board.BoardListService;
+import kr.or.bit.service.board.ReplyDeleteService;
+import kr.or.bit.service.board.ReplyUpdateService;
+import kr.or.bit.service.board.ReplyWriteService;
 
 /**
  * 모든 *.do 요청을 중앙에서 가로채 교통정리하는 대문 서블릿(Front Controller)입니다.
@@ -32,6 +36,9 @@ public class BoardController extends HttpServlet {
         if (urlCommand.equals("/BoardList.do")) {
             action = new BoardListService();
             forward = action.execute(request, response);
+        } else if (urlCommand.equals("/BoardDetail.do")) {
+            action = new BoardDetailService();
+            forward = action.execute(request, response);
         }
         // 2. 원글 쓰기 화면으로 이동 (단순 이동)
         else if (urlCommand.equals("/BoardWriteForm.do")) {
@@ -51,6 +58,15 @@ public class BoardController extends HttpServlet {
             forward = new ActionForward();
             forward.setRedirect(false);
             forward.setPath("/WEB-INF/views/board/board_delete.jsp");
+        } else if (urlCommand.equals("/ReplyWrite.do")) {
+            action = new ReplyWriteService();
+            forward = action.execute(request, response);
+        } else if (urlCommand.equals("/ReplyDelete.do")) {
+            action = new ReplyDeleteService();
+            forward = action.execute(request, response);
+        } else if (urlCommand.equals("/ReplyUpdate.do")) {
+            action = new ReplyUpdateService();
+            forward = action.execute(request, response);
         }
 
         // 공통 페이지 이동 처리
