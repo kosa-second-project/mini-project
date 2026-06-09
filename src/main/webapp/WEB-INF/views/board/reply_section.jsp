@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 
-<c:set var="loginEmpno" value="${1060}" />
+<c:set var="loginEmpno" value="${sessionScope.loginUser.empno}" />
 <c:set var="boardIdx" value="${not empty board ? board.idx : idx}" />
 
 <section id="replySection" style="margin-top: 40px; border-top: 1px solid #222;">
@@ -12,23 +12,32 @@
         </h3>
     </div>
 
-    <form action="ReplyWrite.do" method="post" style="margin: 0 0 10px; padding: 16px; border: 1px solid #ddd; border-radius: 6px; background: #fff;">
-        <input type="hidden" name="idx_fk" value="${boardIdx}">
+    <c:choose>
+        <c:when test="${not empty loginEmpno}">
+            <form action="ReplyWrite.do" method="post" style="margin: 0 0 10px; padding: 16px; border: 1px solid #ddd; border-radius: 6px; background: #fff;">
+                <input type="hidden" name="idx_fk" value="${boardIdx}">
 
-        <div style="display: flex; gap: 12px;">
-            <div style="width: 38px; height: 38px; border-radius: 50%; background: #f1f3f5; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #555; flex-shrink: 0;">
-                <c:out value="${loginEmpno}"/>
-            </div>
-            <div style="flex: 1;">
-                <div style="margin-bottom: 8px; font-size: 13px; font-weight: 700;">&#49324;&#48264; <c:out value="${loginEmpno}"/></div>
-                <textarea name="content" rows="3" placeholder="&#45843;&#44544;&#51012; &#51077;&#47141;&#54616;&#49464;&#50836;" required
-                    style="width: 100%; box-sizing: border-box; resize: vertical; border: 1px solid #ddd; border-radius: 4px; padding: 10px; font-size: 14px; line-height: 1.5; outline: none;"></textarea>
-                <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
-                    <button type="submit" style="border: 0; border-radius: 4px; background: #03c75a; color: #fff; padding: 8px 18px; font-size: 14px; font-weight: 700; cursor: pointer;">&#46321;&#47197;</button>
+                <div style="display: flex; gap: 12px;">
+                    <div style="width: 38px; height: 38px; border-radius: 50%; background: #f1f3f5; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #555; flex-shrink: 0;">
+                        <c:out value="${loginEmpno}"/>
+                    </div>
+                    <div style="flex: 1;">
+                        <div style="margin-bottom: 8px; font-size: 13px; font-weight: 700;">&#49324;&#48264; <c:out value="${loginEmpno}"/></div>
+                        <textarea name="content" rows="3" placeholder="&#45843;&#44544;&#51012; &#51077;&#47141;&#54616;&#49464;&#50836;" required
+                            style="width: 100%; box-sizing: border-box; resize: vertical; border: 1px solid #ddd; border-radius: 4px; padding: 10px; font-size: 14px; line-height: 1.5; outline: none;"></textarea>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
+                            <button type="submit" style="border: 0; border-radius: 4px; background: #03c75a; color: #fff; padding: 8px 18px; font-size: 14px; font-weight: 700; cursor: pointer;">&#46321;&#47197;</button>
+                        </div>
+                    </div>
                 </div>
+            </form>
+        </c:when>
+        <c:otherwise>
+            <div style="margin: 0 0 10px; padding: 16px; border: 1px solid #ddd; border-radius: 6px; background: #fff; color: #777; font-size: 14px;">
+                &#47196;&#44536;&#51064; &#54980; &#45843;&#44544;&#51012; &#51089;&#49457;&#54624; &#49688; &#51080;&#49845;&#45768;&#45796;.
             </div>
-        </div>
-    </form>
+        </c:otherwise>
+    </c:choose>
 
     <div>
         <c:choose>
@@ -48,7 +57,7 @@
                             <div class="reply-view">
                                 <p class="reply-content" style="margin: 0 0 8px; font-size: 14px; line-height: 1.6; color: #222; white-space: pre-wrap;"><c:out value="${reply.content}"/></p>
 
-                                <c:if test="${reply.empno == loginEmpno}">
+                                <c:if test="${not empty loginEmpno and reply.empno == loginEmpno}">
                                     <div class="reply-actions" style="display: flex; align-items: center; gap: 7px; font-size: 13px;">
                                         <button type="button" class="reply-edit-open" style="border: 0; background: transparent; padding: 0; color: #666; cursor: pointer;">&#49688;&#51221;</button>
                                         <span style="color: #ddd;">|</span>
@@ -61,7 +70,7 @@
                                 </c:if>
                             </div>
 
-                            <c:if test="${reply.empno == loginEmpno}">
+                            <c:if test="${not empty loginEmpno and reply.empno == loginEmpno}">
                                 <form action="ReplyUpdate.do" method="post" class="reply-edit-form" hidden style="margin: 0;">
                                     <input type="hidden" name="no" value="${reply.no}">
                                     <input type="hidden" name="idx_fk" value="${boardIdx}">

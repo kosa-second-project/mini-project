@@ -1,50 +1,29 @@
 package kr.or.bit.service.board;
 
-import java.util.List;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.or.bit.action.Action;
 import kr.or.bit.action.ActionForward;
 import kr.or.bit.dao.BoardDao;
-import kr.or.bit.dao.ReplyDao;
 import kr.or.bit.dto.Board;
-import kr.or.bit.dto.Reply;
 
-public class BoardDetailService implements Action {
+public class BoardEditFormService implements Action {
 
     @Override
     public ActionForward execute(HttpServletRequest request, HttpServletResponse response) {
         ActionForward forward = new ActionForward();
-
         try {
-            int idx = BoardFormUtil.parseInt(request, "idx");
-
-            BoardDao boardDao = new BoardDao();
-            ReplyDao replyDao = new ReplyDao();
-
-            Board board = boardDao.getContent(idx);
-            if (board != null && !board.isDeleted()) {
-                boardDao.getReadNum(idx);
-                board = boardDao.getContent(idx);
-            }
-
-            List<Reply> replyList = replyDao.list(idx);
-
+            BoardDao dao = new BoardDao();
+            Board board = dao.getContent(BoardFormUtil.parseInt(request, "idx"));
             BoardFormUtil.setKakaoMapKey(request);
-            request.setAttribute("idx", idx);
             request.setAttribute("board", board);
-            request.setAttribute("replyList", replyList);
-
             forward.setRedirect(false);
-            forward.setPath("/WEB-INF/views/board/board_detail.jsp");
-
+            forward.setPath("/WEB-INF/views/board/board_edit.jsp");
         } catch (Exception e) {
             e.printStackTrace();
             forward.setRedirect(true);
             forward.setPath(request.getContextPath() + "/BoardList.do");
         }
-
         return forward;
     }
 }

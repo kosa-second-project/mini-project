@@ -1,6 +1,7 @@
 package kr.or.bit.controller;
 
 import java.io.IOException;
+
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -9,55 +10,58 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.or.bit.action.Action;
 import kr.or.bit.action.ActionForward;
+import kr.or.bit.service.board.BoardDeleteFormService;
+import kr.or.bit.service.board.BoardDeleteService;
 import kr.or.bit.service.board.BoardDetailService;
+import kr.or.bit.service.board.BoardEditFormService;
+import kr.or.bit.service.board.BoardEditService;
 import kr.or.bit.service.board.BoardListService;
+import kr.or.bit.service.board.BoardWriteService;
 import kr.or.bit.service.board.ReplyDeleteService;
 import kr.or.bit.service.board.ReplyUpdateService;
 import kr.or.bit.service.board.ReplyWriteService;
 
-/**
- * 모든 *.do 요청을 중앙에서 가로채 교통정리하는 대문 서블릿(Front Controller)입니다.
- */
 @WebServlet("*.do")
 public class BoardController extends HttpServlet {
     private static final long serialVersionUID = 1L;
+    private static final String DEFAULT_KAKAO_MAP_KEY = "b0c25c0b9a953eb61c5e6b443815f027";
 
-    protected void doProcess(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doProcess(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String requestUri = request.getRequestURI();
         String contextPath = request.getContextPath();
         String urlCommand = requestUri.substring(contextPath.length());
 
-        System.out.println("urlCommand = " + urlCommand);
-
         Action action = null;
         ActionForward forward = null;
 
-        // 1. 게시글 목록 조회
         if (urlCommand.equals("/BoardList.do")) {
             action = new BoardListService();
+            forward = action.execute(request, response);
+        } else if (urlCommand.equals("/BoardWriteForm.do")) {
+            request.setAttribute("loginRequired", false);
+            request.setAttribute("kakaoMapKey", getKakaoMapKey());
+            forward = new ActionForward();
+            forward.setRedirect(false);
+            forward.setPath("/WEB-INF/views/board/board_write.jsp");
+        } else if (urlCommand.equals("/BoardWriteOk.do")) {
+            action = new BoardWriteService();
             forward = action.execute(request, response);
         } else if (urlCommand.equals("/BoardDetail.do")) {
             action = new BoardDetailService();
             forward = action.execute(request, response);
-        }
-        // 2. 원글 쓰기 화면으로 이동 (단순 이동)
-        else if (urlCommand.equals("/BoardWriteForm.do")) {
-            forward = new ActionForward();
-            forward.setRedirect(false);
-            forward.setPath("/WEB-INF/views/board/board_write.jsp");
-        }
-        // 5. 답글 쓰기 화면으로 이동
-        else if (urlCommand.equals("/BoardRewriteForm.do")) {
-            forward = new ActionForward();
-            forward.setRedirect(false);
-            forward.setPath("/WEB-INF/views/board/board_rewrite.jsp");
-        }
-     
-        // 7. 게시글 삭제 페이지로 이동 (단순 이동)
-        else if (urlCommand.equals("/BoardDeleteForm.do")) {
-            forward = new ActionForward();
-            forward.setRedirect(false);
-            forward.setPath("/WEB-INF/views/board/board_delete.jsp");
+        } else if (urlCommand.equals("/BoardEditForm.do")) {
+            action = new BoardEditFormService();
+            forward = action.execute(request, response);
+        } else if (urlCommand.equals("/BoardEditOk.do")) {
+            action = new BoardEditService();
+            forward = action.execute(request, response);
+        } else if (urlCommand.equals("/BoardDeleteForm.do")) {
+            action = new BoardDeleteFormService();
+            forward = action.execute(request, response);
+        } else if (urlCommand.equals("/BoardDeleteOk.do")) {
+            action = new BoardDeleteService();
+            forward = action.execute(request, response);
         } else if (urlCommand.equals("/ReplyWrite.do")) {
             action = new ReplyWriteService();
             forward = action.execute(request, response);
@@ -67,21 +71,16 @@ public class BoardController extends HttpServlet {
         } else if (urlCommand.equals("/ReplyUpdate.do")) {
             action = new ReplyUpdateService();
             forward = action.execute(request, response);
-        }
-        // 8. 지하철 최단경로 조회 페이지 이동
-        else if (urlCommand.equals("/Subway.do")) {
+        } else if (urlCommand.equals("/Subway.do")) {
             forward = new ActionForward();
             forward.setRedirect(false);
             forward.setPath("/WEB-INF/views/subway/subway.jsp");
-        }
-        // 9. 오늘의 날씨 조회 페이지 이동
-        else if (urlCommand.equals("/Weather.do")) {
+        } else if (urlCommand.equals("/Weather.do")) {
             forward = new ActionForward();
             forward.setRedirect(false);
             forward.setPath("/WEB-INF/views/weather/weather.jsp");
         }
 
-        // 공통 페이지 이동 처리
         if (forward != null) {
             if (forward.isRedirect()) {
                 response.sendRedirect(forward.getPath());
@@ -92,11 +91,21 @@ public class BoardController extends HttpServlet {
         }
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         doProcess(request, response);
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         doProcess(request, response);
+    }
+
+    private String getKakaoMapKey() {
+        String key = System.getProperty("kakao.map.javascript.key");
+        if (key == null || key.trim().isEmpty()) {
+            key = System.getenv("KAKAO_MAP_JAVASCRIPT_KEY");
+        }
+        return key == null || key.trim().isEmpty() ? DEFAULT_KAKAO_MAP_KEY : key;
     }
 }

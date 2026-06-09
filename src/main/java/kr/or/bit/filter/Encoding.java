@@ -45,7 +45,6 @@ public class Encoding extends HttpFilter implements Filter {
 		if(request.getCharacterEncoding()==null) {
 			request.setCharacterEncoding(this.encoding);
 		}
-		System.out.println("웹 접근 시 urlPatterns = {}, 통과");
 		
 		 chain.doFilter(request, response);
 	}

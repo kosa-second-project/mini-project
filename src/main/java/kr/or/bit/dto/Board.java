@@ -21,6 +21,6 @@ public class Board {
     private int depth;
     private int step;
     private boolean deleted;
-    private float lat; // 위도
-    private float lng; // 경도
+    private Float lat; // 위도
+    private Float lng; // 경도
 }

@@ -3,6 +3,7 @@ package kr.or.bit.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class BoardDao {
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-        List<Board> list = null;
+        List<Board> list = new ArrayList<>();
 
         try {
             conn = ConnectionHelper.getConnection(DBType.ORACLE);
@@ -67,25 +68,8 @@ public class BoardDao {
 
             rs = pstmt.executeQuery();
 
-            list = new ArrayList<>();
-
             while (rs.next()) {
-                Board board = Board.builder()
-                        .idx(rs.getInt("idx"))
-                        .empno(rs.getInt("empno"))
-                        .subject(rs.getString("subject"))
-                        .content(rs.getString("content"))
-                        .writedate(rs.getDate("writedate"))
-                        .readnum(rs.getInt("readnum"))
-                        .refer(rs.getInt("refer"))
-                        .depth(rs.getInt("depth"))
-                        .step(rs.getInt("step"))
-                        .deleted(rs.getInt("deleted") == 1)
-                        .lat(rs.getFloat("lat"))
-                        .lng(rs.getFloat("lng"))
-                        .build();
-
-                list.add(board);
+                list.add(mapBoard(rs));
             }
 
         } catch (Exception e) {
@@ -119,20 +103,7 @@ public class BoardDao {
             rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                board = Board.builder()
-                        .idx(rs.getInt("idx"))
-                        .empno(rs.getInt("empno"))
-                        .subject(rs.getString("subject"))
-                        .content(rs.getString("content"))
-                        .writedate(rs.getDate("writedate"))
-                        .readnum(rs.getInt("readnum"))
-                        .refer(rs.getInt("refer"))
-                        .depth(rs.getInt("depth"))
-                        .step(rs.getInt("step"))
-                        .deleted(rs.getInt("deleted") == 1)
-                        .lat(rs.getFloat("lat"))
-                        .lng(rs.getFloat("lng"))
-                        .build();
+                board = mapBoard(rs);
             }
 
         } catch (Exception e) {
@@ -192,8 +163,8 @@ public class BoardDao {
             pstmt.setInt(4, board.getRefer());
             pstmt.setInt(5, board.getDepth());
             pstmt.setInt(6, board.getStep());
-            pstmt.setFloat(7, board.getLat());
-            pstmt.setFloat(8, board.getLng());
+            setNullableFloat(pstmt, 7, board.getLat());
+            setNullableFloat(pstmt, 8, board.getLng());
 
             row = pstmt.executeUpdate();
 
@@ -222,8 +193,8 @@ public class BoardDao {
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, board.getSubject());
             pstmt.setString(2, board.getContent());
-            pstmt.setFloat(3, board.getLat());
-            pstmt.setFloat(4, board.getLng());
+            setNullableFloat(pstmt, 3, board.getLat());
+            setNullableFloat(pstmt, 4, board.getLng());
             pstmt.setInt(5, board.getIdx());
 
             row = pstmt.executeUpdate();
@@ -260,5 +231,33 @@ public class BoardDao {
         }
 
         return row;
+    }
+
+    private Board mapBoard(ResultSet rs) throws SQLException {
+        Float lat = rs.getObject("lat") == null ? null : rs.getFloat("lat");
+        Float lng = rs.getObject("lng") == null ? null : rs.getFloat("lng");
+
+        return Board.builder()
+                .idx(rs.getInt("idx"))
+                .empno(rs.getInt("empno"))
+                .subject(rs.getString("subject"))
+                .content(rs.getString("content"))
+                .writedate(rs.getDate("writedate"))
+                .readnum(rs.getInt("readnum"))
+                .refer(rs.getInt("refer"))
+                .depth(rs.getInt("depth"))
+                .step(rs.getInt("step"))
+                .deleted(rs.getInt("deleted") == 1)
+                .lat(lat)
+                .lng(lng)
+                .build();
+    }
+
+    private void setNullableFloat(PreparedStatement pstmt, int index, Float value) throws SQLException {
+        if (value == null) {
+            pstmt.setNull(index, java.sql.Types.FLOAT);
+        } else {
+            pstmt.setFloat(index, value);
+        }
     }
 }

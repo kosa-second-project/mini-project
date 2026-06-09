@@ -34,13 +34,9 @@ public class BoardListService implements Action {
 
             int pagesize = Integer.parseInt(ps);
             int cpage = Integer.parseInt(cp);
-            int pagecount = 0;
-
-            if (totalboardcount % pagesize == 0) {
-                pagecount = totalboardcount / pagesize;
-            } else {
-                pagecount = (totalboardcount / pagesize) + 1;
-            }
+            int pagecount = totalboardcount % pagesize == 0
+                    ? totalboardcount / pagesize
+                    : (totalboardcount / pagesize) + 1;
 
             List<Board> list = dao.list(cpage, pagesize);
             ThePager pager = new ThePager(totalboardcount, cpage, pagesize, 3, "BoardList.do");
