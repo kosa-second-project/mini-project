@@ -1,0 +1,50 @@
+# ==========================================
+# Java Build & Compiled Output
+# ==========================================
+*.class
+**/bin/
+**/build/
+**/target/
+**/out/
+
+# ==========================================
+# Eclipse IDE Settings
+# ==========================================
+.metadata/
+.classpath
+.project
+.settings/
+*.tmp
+*.bak
+*.swp
+*~
+local.properties
+
+# ==========================================
+# IntelliJ IDEA IDE Settings
+# ==========================================
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# ==========================================
+# VS Code IDE Settings
+# ==========================================
+.vscode/
+
+# ==========================================
+# Operating System Files
+# ==========================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Log.txt
+*.log
