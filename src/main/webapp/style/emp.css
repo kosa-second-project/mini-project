@@ -1,0 +1,278 @@
+/* Custom Styles for EMP System */
+:root {
+    --primary: #4f46e5;
+    --primary-hover: #4338ca;
+    --primary-glow: rgba(79, 70, 229, 0.4);
+    --secondary: #0ea5e9;
+    --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+    --card-bg: rgba(255, 255, 255, 0.08);
+    --card-border: rgba(255, 255, 255, 0.12);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --success: #10b981;
+    --danger: #ef4444;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #334155;
+    min-height: 100vh;
+    background-color: #f8fafc;
+}
+
+/* Dark theme for Login & Main Dashboard Header */
+body.dark-theme {
+    background: var(--bg-gradient);
+    color: var(--text-primary);
+}
+
+/* Glassmorphism Card (Login Page & Profile Card) */
+.glass-card {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+body.dark-theme .glass-card {
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid var(--card-border);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.glass-card:hover {
+    transform: translateY(-2px);
+}
+
+/* Login Page Wrapper */
+.login-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-gradient);
+    padding: 20px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    padding: 40px 30px;
+}
+
+/* Inputs & Form Controls */
+.form-control, .form-select {
+    border-radius: 10px;
+    padding: 12px 16px;
+    border: 1.5px solid #e2e8f0;
+    transition: all 0.2s ease-in-out;
+}
+
+.form-select {
+    padding-right: 48px !important; /* 드롭다운 화살표 공간 확보 */
+}
+
+.form-select-sm {
+    padding: 6px 48px 6px 12px !important;
+    border-radius: 8px;
+}
+
+body.dark-theme .form-control, body.dark-theme .form-select {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    color: var(--text-primary);
+}
+
+body.dark-theme .form-control:focus, body.dark-theme .form-select:focus {
+    background: rgba(15, 23, 42, 0.8);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--primary-glow);
+    color: var(--text-primary);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--primary-glow);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+    box-shadow: 0 4px 12px var(--primary-glow);
+}
+
+.btn-actions {
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+}
+
+/* Profile header component */
+.profile-bar {
+    background: rgba(255, 255, 255, 0.85);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+body.dark-theme .profile-bar {
+    background: rgba(15, 23, 42, 0.8);
+    border-bottom: 1px solid var(--card-border);
+}
+
+/* Custom modern table design */
+.custom-table-container {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+body.dark-theme .custom-table-container {
+    border: 1px solid var(--card-border);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.custom-table {
+    margin-bottom: 0;
+}
+
+.custom-table thead {
+    background-color: #f1f5f9;
+}
+
+body.dark-theme .custom-table thead {
+    background-color: #0f172a;
+}
+
+.custom-table th {
+    padding: 16px 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #64748b;
+}
+
+body.dark-theme .custom-table th {
+    color: #94a3b8;
+}
+
+.custom-table td {
+    padding: 16px 20px;
+    vertical-align: middle;
+    background-color: #ffffff;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+    transition: background-color 0.2s ease;
+}
+
+body.dark-theme .custom-table td {
+    background-color: rgba(30, 41, 59, 0.55);
+    border-bottom: 1px solid var(--card-border);
+    color: #e2e8f0;
+}
+
+.custom-table tbody tr:hover td {
+    background-color: #f8fafc;
+}
+
+body.dark-theme .custom-table tbody tr:hover td {
+    background-color: rgba(30, 41, 59, 0.8);
+}
+
+.clickable-row {
+    cursor: pointer;
+}
+
+/* Badges */
+.badge-admin {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
+.badge-user {
+    background-color: rgba(59, 130, 246, 0.15);
+    color: #3b82f6;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
+/* Modals */
+.modal-content {
+    border-radius: 18px;
+    border: none;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+}
+
+body.dark-theme .modal-content {
+    background-color: #1e293b;
+    color: var(--text-primary);
+    border: 1px solid var(--card-border);
+}
+
+.modal-header {
+    border-bottom: 1px solid #f1f5f9;
+    padding: 20px 24px;
+}
+
+body.dark-theme .modal-header {
+    border-bottom: 1px solid var(--card-border);
+}
+
+.modal-footer {
+    border-top: 1px solid #f1f5f9;
+    padding: 16px 24px;
+}
+
+body.dark-theme .modal-footer {
+    border-top: 1px solid var(--card-border);
+}
+
+/* Toast styling */
+.toast-container {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 1060;
+}
+
+.custom-toast {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    border-left: 5px solid var(--primary);
+}
+
+body.dark-theme .custom-toast {
+    background: #1e293b;
+    border-left: 5px solid var(--primary);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+}
+
+/* Shake Animation for Login Errors */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-6px); }
+    20%, 40%, 60%, 80% { transform: translateX(6px); }
+}
+
+.shake {
+    animation: shake 0.5s ease-in-out;
+}
