@@ -4,11 +4,11 @@
   공통 퀵메뉴 (토글 플로팅 버튼)
   디자인(CSS)과 스크립트(JS)가 분리된 정석 구조의 JSP 컴포넌트입니다.
 -->
-<link rel="stylesheet" href="${pageContext.request.contextPath}/style/quickMenu.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/style/quickMenu.css?v=<%=System.currentTimeMillis()%>">
 <script>
     window.contextPath = "${pageContext.request.contextPath}";
 </script>
-<script src="${pageContext.request.contextPath}/js/quickMenu.js" defer></script>
+<script src="${pageContext.request.contextPath}/js/quickMenu.js?v=<%=System.currentTimeMillis()%>" defer></script>
 
 <div class="quick-menu-wrapper" id="quickMenuWrapper">
     <!-- 서브 메뉴 목록 -->

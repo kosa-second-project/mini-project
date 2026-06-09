@@ -15,14 +15,14 @@
     <!-- Lucide Icons (CDN) -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
-    <!-- Context Path 적용한 외부 스타일시트 링크 -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/subway.css">
+    <!-- Context Path 및 캐시 방지 적용한 외부 스타일시트 링크 -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/subway.css?v=<%=System.currentTimeMillis()%>">
 </head>
 <body>
 
     <header>
         <div class="logo">
-            <i data-lucide="subway"></i>
+            <i data-lucide="train"></i>
             <span>METRO WAYFINDER</span>
         </div>
         <div id="modeBadge" class="api-badge api-real">
@@ -156,8 +156,8 @@
     <!-- 공통 플로팅 퀵메뉴 연동 -->
     <jsp:include page="/include/quickMenu.jsp" />
 
-    <!-- Context Path 적용한 외부 스크립트 링크 -->
-    <script src="${pageContext.request.contextPath}/js/stations.js"></script>
-    <script src="${pageContext.request.contextPath}/js/subway.js"></script>
+    <!-- Context Path 및 캐시 방지 적용한 외부 스크립트 링크 -->
+    <script src="${pageContext.request.contextPath}/js/stations.js?v=<%=System.currentTimeMillis()%>"></script>
+    <script src="${pageContext.request.contextPath}/js/subway.js?v=<%=System.currentTimeMillis()%>"></script>
 </body>
 </html>
