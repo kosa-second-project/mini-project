@@ -4,8 +4,8 @@
  */
 
 document.addEventListener("DOMContentLoaded", function() {
-    // 공공데이터포털에서 발급받은 인증키 (디코딩 버전 사용)
-    const serviceKey = "T48sPzRyTh1HbSib+kf6MN50dBZ8aQJO7h5YkYC/PNtIHGUBdQag2eTvj2/ripL8xZxV+Ql9jtGSWxofDPLM1g==";
+    // 공공데이터포털에서 발급받은 인코딩된 인증키 사용 (더블 인코딩 방지)
+    const serviceKey = "T48sPzRyTh1HbSib%2Bkf6MN50dBZ8aQJO7h5YkYC%2FPNtIHGUBdQag2eTvj2%2FripL8xZxV%2BQl9jtGSWxofDPLM1g%3D%3D";
     
     // 날씨 조회 시작
     loadTodayWeather(serviceKey);
@@ -81,8 +81,8 @@ async function fetchWeatherData(key, baseDate, baseTime) {
     const nx = 62;
     const ny = 126;
     
-    // URL 수동 조립하여 인코딩 오류 예방
-    const targetUrl = `${baseUrl}?serviceKey=${encodeURIComponent(key)}&dataType=JSON&numOfRows=60&pageNo=1&base_date=${baseDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`;
+    // URL 수동 조립하여 인코딩 오류 예방 (이미 인코딩된 키이므로 그대로 사용)
+    const targetUrl = `${baseUrl}?serviceKey=${key}&dataType=JSON&numOfRows=60&pageNo=1&base_date=${baseDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`;
     
     // 1차 시도: 직접 Fetch
     try {
