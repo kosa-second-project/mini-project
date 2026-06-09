@@ -22,6 +22,14 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 /**
+ * 메인 페이지 이동 클릭 이벤트 핸들러
+ */
+function onHomeClick() {
+    var path = (window.contextPath || "") + "/index.jsp";
+    location.href = path;
+}
+
+/**
  * 오늘의 날씨 클릭 이벤트 핸들러
  */
 function onWeatherClick() {

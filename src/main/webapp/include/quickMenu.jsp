@@ -16,6 +16,15 @@
         <li>
             <div class="quick-menu-item-wrapper">
                 <!-- 마우스 오버 시 왼쪽에 뜰 텍스트 라벨 -->
+                <span class="quick-menu-label">메인 페이지</span>
+                <a href="javascript:void(0);" class="quick-menu-item" onclick="onHomeClick()">
+                    <span class="quick-menu-icon">🏠</span>
+                </a>
+            </div>
+        </li>
+        <li>
+            <div class="quick-menu-item-wrapper">
+                <!-- 마우스 오버 시 왼쪽에 뜰 텍스트 라벨 -->
                 <span class="quick-menu-label">오늘의 날씨</span>
                 <a href="javascript:void(0);" class="quick-menu-item" onclick="onWeatherClick()">
                     <span class="quick-menu-icon">☀️</span>
