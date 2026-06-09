@@ -9,6 +9,8 @@
             const input = document.getElementById(inputId);
             const suggestions = document.getElementById(suggestionsId);
 
+            if (!input || !suggestions) return;
+
             input.addEventListener("input", () => {
                 const query = input.value.trim();
                 suggestions.innerHTML = "";
@@ -52,21 +54,23 @@
             });
         }
 
-        // Toggle Settings Panel
+        // Toggle Settings Panel (안전 검사 추가)
         const settingsToggle = document.getElementById("settingsToggle");
         const settingsContent = document.getElementById("settingsContent");
         const settingsChevron = document.getElementById("settingsChevron");
 
-        settingsToggle.addEventListener("click", () => {
-            const isVisible = settingsContent.style.display === "flex";
-            if (isVisible) {
-                settingsContent.style.display = "none";
-                settingsChevron.style.transform = "rotate(0deg)";
-            } else {
-                settingsContent.style.display = "flex";
-                settingsChevron.style.transform = "rotate(180deg)";
-            }
-        });
+        if (settingsToggle && settingsContent && settingsChevron) {
+            settingsToggle.addEventListener("click", () => {
+                const isVisible = settingsContent.style.display === "flex";
+                if (isVisible) {
+                    settingsContent.style.display = "none";
+                    settingsChevron.style.transform = "rotate(0deg)";
+                } else {
+                    settingsContent.style.display = "flex";
+                    settingsChevron.style.transform = "rotate(180deg)";
+                }
+            });
+        }
 
         // Swap departure and arrival
         document.getElementById("btnSwap").addEventListener("click", () => {
@@ -94,14 +98,9 @@
                 return;
             }
 
-            // Show searching spinner states if needed
-            const btnText = document.getElementById("btnSearch").querySelector("span");
-            const btnIcon = document.getElementById("btnSearch").querySelector("svg, i");
-            btnText.textContent = "경로 검색 중...";
-            if (btnIcon) {
-                btnIcon.setAttribute("data-lucide", "loader-2");
-                btnIcon.classList.add("spin");
-            }
+            // 버튼 상태를 검색 중으로 변경 (HTML 자체를 교체하여 오작동 방지)
+            const btn = document.getElementById("btnSearch");
+            btn.innerHTML = `<i data-lucide="loader-2" class="spin"></i> <span>경로 검색 중...</span>`;
             lucide.createIcons();
 
             const apiKey = document.getElementById("apiKeyInput").value.trim();
@@ -113,12 +112,8 @@
                 console.error("API Fetch Failed:", e);
                 alert("실시간 최단경로 탐색에 실패했습니다:\n" + e.message);
             } finally {
-                // Restore Search Button state
-                btnText.textContent = "경로 탐색 시작";
-                if (btnIcon) {
-                    btnIcon.setAttribute("data-lucide", "route");
-                    btnIcon.classList.remove("spin");
-                }
+                // 버튼 상태 복원 (아이콘 회전 제거)
+                btn.innerHTML = `<i data-lucide="route"></i> <span>경로 탐색 시작</span>`;
                 lucide.createIcons();
             }
         });

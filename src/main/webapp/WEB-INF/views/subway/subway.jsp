@@ -49,17 +49,18 @@
                 <div id="dptreSuggestions" class="autocomplete-suggestions"></div>
             </div>
 
-            <button class="btn-swap" id="btnSwap" title="출발역 / 도착역 교환" aria-label="출발역과 도착역 변경">
+            <!-- Swap 버튼 비활성화/숨김 (목적역 고정) -->
+            <button class="btn-swap" id="btnSwap" style="display: none !important;" title="출발역 / 도착역 교환" aria-label="출발역과 도착역 변경">
                 <i data-lucide="arrow-up-down"></i>
             </button>
 
             <div class="input-group">
                 <label for="arvlInput">목적역 (Destination)</label>
                 <div class="input-wrapper">
-                    <input type="text" id="arvlInput" placeholder="도착할 지하철역 입력 (예: 신도림, 홍대입구)" autocomplete="off">
+                    <!-- 가락시장역으로 고정 및 읽기 전용 설정 -->
+                    <input type="text" id="arvlInput" value="가락시장" readonly style="background-color: rgba(0, 0, 0, 0.4); color: var(--text-muted); cursor: not-allowed;" autocomplete="off">
                     <i data-lucide="map-pin"></i>
                 </div>
-                <div id="arvlSuggestions" class="autocomplete-suggestions"></div>
             </div>
 
             <button class="btn-search" id="btnSearch">
@@ -67,31 +68,20 @@
                 <span>경로 탐색 시작</span>
             </button>
 
-            <!-- Quick Selection -->
+            <!-- Quick Selection (도착지 가락시장역 고정으로 갱신) -->
             <div class="quick-links">
                 <div class="quick-links-title">주요 노선 및 빠른 검색</div>
                 <div class="quick-chips">
-                    <button class="chip" onclick="quickSelect('서울역', '신도림')">서울역 → 신도림</button>
-                    <button class="chip" onclick="quickSelect('강남', '홍대입구')">강남 → 홍대입구</button>
-                    <button class="chip" onclick="quickSelect('고속터미널', '성수')">고속터미널 → 성수</button>
-                    <button class="chip" onclick="quickSelect('종로3가', '사당')">종로3가 → 사당</button>
+                    <button class="chip" onclick="quickSelect('서울역', '가락시장')">서울역 → 가락시장</button>
+                    <button class="chip" onclick="quickSelect('강남', '가락시장')">강남 → 가락시장</button>
+                    <button class="chip" onclick="quickSelect('고속터미널', '가락시장')">고속터미널 → 가락시장</button>
+                    <button class="chip" onclick="quickSelect('종로3가', '가락시장')">종로3가 → 가락시장</button>
                 </div>
             </div>
 
-            <!-- API Secret Details -->
-            <div class="settings-toggle" id="settingsToggle">
-                <span>공공데이터 API 설정 변경</span>
-                <i data-lucide="chevron-down" id="settingsChevron"></i>
-            </div>
-
-            <div class="settings-content" id="settingsContent">
-                <div class="input-group">
-                    <label for="apiKeyInput">인증키 (Service Key)</label>
-                    <div class="input-wrapper">
-                        <input type="text" id="apiKeyInput" value="vHBYWqU149oaFLCprcymaJOpENMdDOPzzLdjjbZDv8jZBSzOim1gsSWrNaaEfNK02dC5Ti%2B4agRjQo8%2B5vwGlA%3D%3D" placeholder="인증키 입력">
-                        <i data-lucide="key"></i>
-                    </div>
-                </div>
+            <!-- 숨겨진 API 설정 영역 (화면 표시 안 됨, JS의 DOM 탐색 유지) -->
+            <div class="settings-content" id="settingsContent" style="display: none !important;">
+                <input type="hidden" id="apiKeyInput" value="vHBYWqU149oaFLCprcymaJOpENMdDOPzzLdjjbZDv8jZBSzOim1gsSWrNaaEfNK02dC5Ti%2B4agRjQo8%2B5vwGlA%3D%3D">
             </div>
         </div>
 
