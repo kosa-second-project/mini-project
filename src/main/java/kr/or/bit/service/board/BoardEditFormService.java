@@ -28,6 +28,7 @@ public class BoardEditFormService implements Action {
                 forward.setPath(request.getContextPath() + "/BoardList.do");
                 return forward;
             }
+            BoardFormUtil.setKakaoMapKey(request);
             request.setAttribute("board", board);
             forward.setRedirect(false);
             forward.setPath("/WEB-INF/views/board/board_edit.jsp");

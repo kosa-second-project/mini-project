@@ -15,6 +15,7 @@ import kr.or.bit.service.board.BoardDeleteService;
 import kr.or.bit.service.board.BoardDetailService;
 import kr.or.bit.service.board.BoardEditFormService;
 import kr.or.bit.service.board.BoardEditService;
+import kr.or.bit.service.board.BoardFormUtil;
 import kr.or.bit.service.board.BoardListService;
 import kr.or.bit.service.board.BoardWriteService;
 import kr.or.bit.service.board.ReplyDeleteService;
@@ -39,6 +40,7 @@ public class BoardController extends HttpServlet {
             forward = action.execute(request, response);
         } else if (urlCommand.equals("/BoardWriteForm.do")) {
             request.setAttribute("loginRequired", false);
+            BoardFormUtil.setKakaoMapKey(request);
             forward = new ActionForward();
             forward.setRedirect(false);
             forward.setPath("/WEB-INF/views/board/board_write.jsp");

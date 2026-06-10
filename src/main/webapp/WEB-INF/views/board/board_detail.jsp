@@ -40,6 +40,9 @@
 </main>
 
 <jsp:include page="/include/quickMenu.jsp" />
+<c:if test="${not empty kakaoMapKey}">
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapKey}"></script>
+</c:if>
 <script src="${pageContext.request.contextPath}/js/board-editor.js?v=<%=System.currentTimeMillis()%>"></script>
 <script src="${pageContext.request.contextPath}/js/reply.js?v=<%=System.currentTimeMillis()%>"></script>
 <script src="${pageContext.request.contextPath}/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
