@@ -2,11 +2,11 @@ package kr.or.bit.service.board;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import kr.or.bit.action.Action;
 import kr.or.bit.action.ActionForward;
 import kr.or.bit.dao.ReplyDao;
 import kr.or.bit.dto.Emp;
+import kr.or.bit.utils.SessionUtil;
 
 public class ReplyDeleteService implements Action {
     @Override
@@ -14,14 +14,13 @@ public class ReplyDeleteService implements Action {
         ActionForward forward = new ActionForward();
 
         try {
-            HttpSession session = request.getSession(false);
-            if (session == null || session.getAttribute("loginUser") == null) {
+            Emp loginUser = SessionUtil.getLoginUser(request);
+            if (loginUser == null) {
                 forward.setRedirect(true);
                 forward.setPath(request.getContextPath() + "/Login.emp");
                 return forward;
             }
 
-            Emp loginUser = (Emp) session.getAttribute("loginUser");
             int no = Integer.parseInt(request.getParameter("no"));
             int idx_fk = Integer.parseInt(request.getParameter("idx_fk"));
 

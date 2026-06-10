@@ -6,13 +6,14 @@ import kr.or.bit.action.Action;
 import kr.or.bit.action.ActionForward;
 import kr.or.bit.dao.BoardDao;
 import kr.or.bit.dto.Board;
+import kr.or.bit.utils.SessionUtil;
 
 public class BoardWriteService implements Action {
     @Override
     public ActionForward execute(HttpServletRequest request, HttpServletResponse response) {
         ActionForward forward = new ActionForward();
         try {
-            Integer empno = BoardFormUtil.getLoginEmpno(request);
+            Integer empno = SessionUtil.getLoginEmpno(request);
             if (empno == null) {
                 forward.setRedirect(true);
                 forward.setPath(request.getContextPath() + "/Login.emp");

@@ -9,10 +9,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import kr.or.bit.dao.ReplyDao;
 import kr.or.bit.dto.Emp;
 import kr.or.bit.dto.Reply;
+import kr.or.bit.utils.SessionUtil;
 
 @WebServlet("/ReplyUpdateAjax")
 public class ReplyUpdateAjax extends HttpServlet {
@@ -23,13 +23,12 @@ public class ReplyUpdateAjax extends HttpServlet {
         response.setContentType("application/json;charset=UTF-8");
         PrintWriter out = response.getWriter();
 
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("loginUser") == null) {
+        Emp loginUser = SessionUtil.getLoginUser(request);
+        if (loginUser == null) {
             out.print("{\"status\":\"fail\",\"message\":\"로그인 후 댓글을 수정할 수 있습니다.\"}");
             return;
         }
 
-        Emp loginUser = (Emp) session.getAttribute("loginUser");
         int no = Integer.parseInt(request.getParameter("no"));
         int idx_fk = Integer.parseInt(request.getParameter("idx_fk"));
         String content = request.getParameter("content");

@@ -1,12 +1,11 @@
 package kr.or.bit.ajax.emp;
 
-import java.io.IOException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import kr.or.bit.action.AjaxAction;
 import kr.or.bit.dao.EmpDao;
 import kr.or.bit.dto.Emp;
+import kr.or.bit.utils.SessionUtil;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class EmpUpdateService implements AjaxAction {
@@ -14,17 +13,14 @@ public class EmpUpdateService implements AjaxAction {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         response.setContentType("application/json;charset=UTF-8");
 
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("loginUser") == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("{\"status\": \"fail\", \"message\": \"로그인이 필요합니다.\"}");
+        Emp loginUser = SessionUtil.getLoginUser(request);
+        if (loginUser == null) {
+            SessionUtil.writeUnauthorizedJson(response, "로그인이 필요합니다.");
             return;
         }
 
-        Emp loginUser = (Emp) session.getAttribute("loginUser");
-        if (!"ADMIN".equalsIgnoreCase(loginUser.getRole()) && !"대표".equals(loginUser.getPosition())) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("{\"status\": \"fail\", \"message\": \"사원 수정 권한이 없습니다. (대표만 가능)\"}");
+        if (!SessionUtil.isAdminOrRepresentative(loginUser)) {
+            SessionUtil.writeForbiddenJson(response, "사원 수정 권한이 없습니다.");
             return;
         }
 
@@ -39,9 +35,9 @@ public class EmpUpdateService implements AjaxAction {
         String pwd = request.getParameter("pwd");
         String role = request.getParameter("role");
 
-        if (empnoStr == null || empnoStr.trim().isEmpty() ||
-            ename == null || ename.trim().isEmpty()) {
-            response.getWriter().write("{\"status\": \"fail\", \"message\": \"필수 입력 항목(사번, 이름)이 누락되었습니다.\"}");
+        if (empnoStr == null || empnoStr.trim().isEmpty()
+                || ename == null || ename.trim().isEmpty()) {
+            response.getWriter().write("{\"status\": \"fail\", \"message\": \"필수 입력 항목이 누락되었습니다.\"}");
             return;
         }
 
@@ -59,7 +55,6 @@ public class EmpUpdateService implements AjaxAction {
             deptno = Integer.parseInt(deptnoStr.trim());
         }
 
-        // 수정 대상 사원 조회
         EmpDao dao = EmpDao.getInstance();
         Emp target = dao.getEmpByEmpno(empno);
         if (target == null) {
@@ -67,7 +62,6 @@ public class EmpUpdateService implements AjaxAction {
             return;
         }
 
-        // 비밀번호 변경 여부 처리
         String hashedPwd = null;
         if (pwd != null && !pwd.trim().isEmpty()) {
             hashedPwd = BCrypt.hashpw(pwd, BCrypt.gensalt());
@@ -82,16 +76,15 @@ public class EmpUpdateService implements AjaxAction {
                 .hiredate(hiredate)
                 .sal(sal)
                 .deptno(deptno)
-                .pwd(hashedPwd) // NULL인 경우 패스워드 제외하고 수정
+                .pwd(hashedPwd)
                 .role(role == null || role.trim().isEmpty() ? target.getRole() : role)
                 .build();
 
         int row = dao.updateEmp(updatedEmp);
         if (row > 0) {
-            // 만약 로그인된 자신이 자신을 수정한 경우 세션을 새로고침해줄 수 있습니다.
             if (loginUser.getEmpno() == empno) {
                 Emp refreshed = dao.getEmpByEmpno(empno);
-                session.setAttribute("loginUser", refreshed);
+                SessionUtil.setLoginUser(request, refreshed);
             }
             response.getWriter().write("{\"status\": \"success\"}");
         } else {
