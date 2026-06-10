@@ -26,7 +26,7 @@ public class EmpController extends HttpServlet {
         Action action = null;
         ActionForward forward = null;
 
-        if (urlCommand.equals("/Login.emp") || urlCommand.equals("/LoginOk.emp")) {
+        if (urlCommand.equals("/Login.emp")) {
             action = new LoginService();
             forward = action.execute(request, response);
         } else if (urlCommand.equals("/Logout.emp")) {
@@ -34,24 +34,6 @@ public class EmpController extends HttpServlet {
             forward = action.execute(request, response);
         } else if (urlCommand.equals("/Main.emp")) {
             action = new MainService();
-            forward = action.execute(request, response);
-        } else if (urlCommand.equals("/EmpList.emp")) {
-            action = new EmpListService();
-            forward = action.execute(request, response);
-        } else if (urlCommand.equals("/EmpDetail.emp")) {
-            action = new EmpDetailService();
-            forward = action.execute(request, response);
-        } else if (urlCommand.equals("/EmpInsert.emp")) {
-            action = new EmpInsertService();
-            forward = action.execute(request, response);
-        } else if (urlCommand.equals("/EmpUpdate.emp")) {
-            action = new EmpUpdateService();
-            forward = action.execute(request, response);
-        } else if (urlCommand.equals("/EmpDelete.emp")) {
-            action = new EmpDeleteService();
-            forward = action.execute(request, response);
-        } else if (urlCommand.equals("/DeptList.emp")) {
-            action = new DeptListService();
             forward = action.execute(request, response);
         }
 

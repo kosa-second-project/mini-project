@@ -1,46 +1,30 @@
-package kr.or.bit.service.emp;
+package kr.or.bit.ajax.emp;
 
 import java.io.IOException;
 import java.util.List;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import kr.or.bit.action.Action;
-import kr.or.bit.action.ActionForward;
+import kr.or.bit.action.AjaxAction;
 import kr.or.bit.dao.DeptDao;
 import kr.or.bit.dto.Dept;
 
-public class DeptListService implements Action {
+public class DeptListService implements AjaxAction {
     @Override
-    public ActionForward execute(HttpServletRequest request, HttpServletResponse response) {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         response.setContentType("application/json;charset=UTF-8");
 
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("loginUser") == null) {
-            try {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("{\"status\": \"fail\", \"message\": \"로그인이 필요합니다.\"}");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("{\"status\": \"fail\", \"message\": \"로그인이 필요합니다.\"}");
+            return;
         }
 
-        try {
-            DeptDao dao = DeptDao.getInstance();
-            List<Dept> list = dao.getDeptList();
-            String json = deptListToJson(list);
-            response.getWriter().write(json);
-        } catch (Exception e) {
-            e.printStackTrace();
-            try {
-                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                response.getWriter().write("{\"status\": \"fail\", \"message\": \"Server error\"}");
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-        return null;
+        DeptDao dao = DeptDao.getInstance();
+        List<Dept> list = dao.getDeptList();
+        String json = deptListToJson(list);
+        response.getWriter().write(json);
     }
 
     private String deptListToJson(List<Dept> list) {

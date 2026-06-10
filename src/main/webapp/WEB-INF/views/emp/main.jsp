@@ -327,7 +327,7 @@
                 selectEl.value = pagesize;
             }
 
-            fetch(`EmpList.emp?cp=\${cpage}&ps=\${pagesize}`)
+            fetch(`EmpList.ajax?cp=\${cpage}&ps=\${pagesize}`)
                 .then(res => {
                     if (res.status === 401) {
                         window.location.href = 'Login.emp';
@@ -451,7 +451,7 @@
 
         // 2. 부서 목록 AJAX 로딩 및 Select Box 바인딩
         function loadDeptList(selectElementId, selectedValue = '') {
-            return fetch('DeptList.emp')
+            return fetch('DeptList.ajax')
                 .then(res => res.json())
                 .then(depts => {
                     const select = document.getElementById(selectElementId);
@@ -485,7 +485,7 @@
             const formData = new FormData(form);
             const params = new URLSearchParams(formData);
 
-            fetch('EmpInsert.emp', {
+            fetch('EmpInsert.ajax', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: params
@@ -508,7 +508,7 @@
 
         // 5. 사원 상세 모달 오픈
         function openDetailModal(empno) {
-            fetch(`EmpDetail.emp?empno=\${empno}`)
+            fetch(`EmpDetail.ajax?empno=\${empno}`)
                 .then(res => res.json())
                 .then(res => {
                     if (res.status === 'success') {
@@ -554,7 +554,7 @@
             const formData = new FormData(form);
             const params = new URLSearchParams(formData);
 
-            fetch('EmpUpdate.emp', {
+            fetch('EmpUpdate.ajax', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: params
@@ -590,7 +590,7 @@
             const params = new URLSearchParams();
             params.append('empno', empno);
 
-            fetch('EmpDelete.emp', {
+            fetch('EmpDelete.ajax', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: params
