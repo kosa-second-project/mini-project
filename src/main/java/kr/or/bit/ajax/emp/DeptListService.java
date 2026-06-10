@@ -1,23 +1,21 @@
 package kr.or.bit.ajax.emp;
 
-import java.io.IOException;
 import java.util.List;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import kr.or.bit.action.AjaxAction;
 import kr.or.bit.dao.DeptDao;
 import kr.or.bit.dto.Dept;
+import kr.or.bit.utils.SessionUtil;
 
 public class DeptListService implements AjaxAction {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         response.setContentType("application/json;charset=UTF-8");
 
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("loginUser") == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("{\"status\": \"fail\", \"message\": \"로그인이 필요합니다.\"}");
+        if (!SessionUtil.isLoggedIn(request)) {
+            SessionUtil.writeUnauthorizedJson(response, "로그인이 필요합니다.");
             return;
         }
 
@@ -46,7 +44,9 @@ public class DeptListService implements AjaxAction {
     }
 
     private String escapeJson(String val) {
-        if (val == null) return "";
+        if (val == null) {
+            return "";
+        }
         return val.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r");
     }
 }

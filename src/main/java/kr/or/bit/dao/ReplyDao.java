@@ -11,6 +11,17 @@ import kr.or.bit.utils.ConnectionHelper;
 import kr.or.bit.utils.DBType;
 
 public class ReplyDao {
+    private static ReplyDao instance;
+
+    private ReplyDao() {
+    }
+
+    public static synchronized ReplyDao getInstance() {
+        if (instance == null) {
+            instance = new ReplyDao();
+        }
+        return instance;
+    }
 
     public List<Reply> list(int idx_fk) {
         Connection conn = null;
@@ -21,10 +32,13 @@ public class ReplyDao {
         try {
             conn = ConnectionHelper.getConnection(DBType.ORACLE);
 
-            String sql = "select no, empno, content, writedate, idx_fk, refer, depth, step, deleted "
-                       + "from reply "
-                       + "where idx_fk = ? and deleted = 0 "
-                       + "order by no desc";
+            String sql = "select r.no, r.empno, e.ename, d.deptname, r.content, r.writedate, "
+                       + "       r.idx_fk, r.refer, r.depth, r.step, r.deleted "
+                       + "from reply r "
+                       + "left join emp e on r.empno = e.empno "
+                       + "left join dept d on e.deptno = d.deptno "
+                       + "where r.idx_fk = ? and r.deleted = 0 "
+                       + "order by r.no desc";
 
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, idx_fk);
@@ -37,6 +51,8 @@ public class ReplyDao {
                 Reply reply = Reply.builder()
                         .no(rs.getInt("no"))
                         .empno(rs.getInt("empno"))
+                        .ename(rs.getString("ename"))
+                        .deptname(rs.getString("deptname"))
                         .content(rs.getString("content"))
                         .writedate(rs.getDate("writedate"))
                         .idx_fk(rs.getInt("idx_fk"))

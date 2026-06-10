@@ -9,10 +9,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import kr.or.bit.dao.ReplyDao;
 import kr.or.bit.dto.Emp;
 import kr.or.bit.dto.Reply;
+import kr.or.bit.utils.SessionUtil;
 
 @WebServlet("/ReplyWriteAjax")
 public class ReplyWriteAjax extends HttpServlet {
@@ -23,13 +23,12 @@ public class ReplyWriteAjax extends HttpServlet {
         response.setContentType("application/json;charset=UTF-8");
         PrintWriter out = response.getWriter();
 
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("loginUser") == null) {
-            out.print("{\"status\":\"fail\",\"message\":\"로그인 후 댓글을 작성할 수 있습니다.\"}");
+        Emp loginUser = SessionUtil.getLoginUser(request);
+        if (loginUser == null) {
+            out.print("{\"status\":\"fail\",\"message\":\"로그인해야 댓글을 작성할 수 있습니다.\"}");
             return;
         }
 
-        Emp loginUser = (Emp) session.getAttribute("loginUser");
         int idx_fk = Integer.parseInt(request.getParameter("idx_fk"));
         String content = request.getParameter("content");
 
@@ -47,7 +46,7 @@ public class ReplyWriteAjax extends HttpServlet {
                 .step(0)
                 .build();
 
-        ReplyDao dao = new ReplyDao();
+        ReplyDao dao = ReplyDao.getInstance();
         int row = dao.write(reply);
 
         if (row <= 0) {
@@ -69,6 +68,8 @@ public class ReplyWriteAjax extends HttpServlet {
                 json.append("{");
                 json.append("\"no\":").append(r.getNo()).append(",");
                 json.append("\"empno\":").append(r.getEmpno()).append(",");
+                json.append("\"ename\":\"").append(r.getEname() == null ? "" : r.getEname().replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n")).append("\",");
+                json.append("\"deptname\":\"").append(r.getDeptname() == null ? "" : r.getDeptname().replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n")).append("\",");
                 json.append("\"content\":\"").append(r.getContent() == null ? "" : r.getContent().replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n")).append("\",");
                 json.append("\"writedate\":\"").append(r.getWritedate()).append("\",");
                 json.append("\"idx_fk\":").append(r.getIdx_fk()).append(",");

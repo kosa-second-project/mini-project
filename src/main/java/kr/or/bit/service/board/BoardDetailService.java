@@ -20,8 +20,8 @@ public class BoardDetailService implements Action {
         try {
             int idx = BoardFormUtil.parseInt(request, "idx");
 
-            BoardDao boardDao = new BoardDao();
-            ReplyDao replyDao = new ReplyDao();
+            BoardDao boardDao = BoardDao.getInstance();
+            ReplyDao replyDao = ReplyDao.getInstance();
 
             Board board = boardDao.getContent(idx);
             if (board != null && !board.isDeleted()) {
@@ -31,7 +31,6 @@ public class BoardDetailService implements Action {
 
             List<Reply> replyList = replyDao.list(idx);
 
-            BoardFormUtil.setKakaoMapKey(request);
             request.setAttribute("idx", idx);
             request.setAttribute("board", board);
             request.setAttribute("replyList", replyList);

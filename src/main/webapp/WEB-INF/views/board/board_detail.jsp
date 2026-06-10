@@ -1,16 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>게시글 상세</title>
-<link href="${pageContext.request.contextPath}/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-<link href="${pageContext.request.contextPath}/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-<link href="${pageContext.request.contextPath}/assets/css/folioone-theme.css" rel="stylesheet">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/board.css?v=20260609-map-layout">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reply.css">
-</head>
+<jsp:include page="/include/header.jsp">
+    <jsp:param name="pageTitle" value="게시글 상세" />
+    <jsp:param name="pageCss" value="/assets/css/board.css" />
+    <jsp:param name="pageCss2" value="/assets/css/reply.css" />
+</jsp:include>
 <body class="app-shell">
 <main class="board-page">
     <c:choose>
@@ -23,22 +17,18 @@
                 <h1><c:out value="${board.subject}" /></h1>
                 <div class="meta">
                     <span>글 번호 ${board.idx}</span>
-                    <span>사원번호 ${board.empno}</span>
+                    <span>작성자 <c:out value="${empty board.ename ? board.empno : board.ename}" /><c:if test="${not empty board.deptname}"> (<c:out value="${board.deptname}" />)</c:if></span>
                     <span>작성일 ${board.writedate}</span>
                     <span>조회수 ${board.readnum}</span>
                 </div>
-                <pre class="content"><c:out value="${board.content}" /></pre>
-
-                <c:if test="${not empty board.lat and not empty board.lng}">
-                    <section class="map-section" data-map-mode="detail" data-lat="${board.lat}" data-lng="${board.lng}">
-                        <h2>위치</h2>
-                        <div id="map" class="map-box"></div>
-                    </section>
-                </c:if>
+                <textarea id="boardContentSource" class="editor-source"><c:out value="${board.content}" /></textarea>
+                <div id="boardContent" class="content rich-content" data-editor-mode="detail"></div>
 
                 <div class="actions">
-                    <a href="${pageContext.request.contextPath}/BoardEditForm.do?idx=${board.idx}">수정</a>
-                    <a href="${pageContext.request.contextPath}/BoardDeleteForm.do?idx=${board.idx}">삭제</a>
+                    <c:if test="${not empty sessionScope.loginUser and sessionScope.loginUser.empno == board.empno}">
+                        <a href="${pageContext.request.contextPath}/BoardEditForm.do?idx=${board.idx}">수정</a>
+                        <a href="${pageContext.request.contextPath}/BoardDeleteForm.do?idx=${board.idx}">삭제</a>
+                    </c:if>
                     <a href="${pageContext.request.contextPath}/BoardList.do">목록</a>
                 </div>
             </article>
@@ -49,10 +39,8 @@
 </main>
 
 <jsp:include page="/include/quickMenu.jsp" />
-<c:if test="${not empty kakaoMapKey and not empty board.lat and not empty board.lng}">
-<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapKey}"></script>
-<script src="${pageContext.request.contextPath}/js/board-map.js?v=20260609-map-layout"></script>
-</c:if>
+<script src="${pageContext.request.contextPath}/js/board-editor.js?v=<%=System.currentTimeMillis()%>"></script>
+<script src="${pageContext.request.contextPath}/js/reply.js?v=<%=System.currentTimeMillis()%>"></script>
 <script src="${pageContext.request.contextPath}/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

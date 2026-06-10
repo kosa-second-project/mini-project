@@ -2,12 +2,12 @@ package kr.or.bit.service.board;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import kr.or.bit.action.Action;
 import kr.or.bit.action.ActionForward;
 import kr.or.bit.dao.ReplyDao;
 import kr.or.bit.dto.Emp;
 import kr.or.bit.dto.Reply;
+import kr.or.bit.utils.SessionUtil;
 
 public class ReplyWriteService implements Action {
     @Override
@@ -15,14 +15,13 @@ public class ReplyWriteService implements Action {
         ActionForward forward = new ActionForward();
 
         try {
-            HttpSession session = request.getSession(false);
-            if (session == null || session.getAttribute("loginUser") == null) {
+            Emp loginUser = SessionUtil.getLoginUser(request);
+            if (loginUser == null) {
                 forward.setRedirect(true);
                 forward.setPath(request.getContextPath() + "/Login.emp");
                 return forward;
             }
 
-            Emp loginUser = (Emp) session.getAttribute("loginUser");
             int idx_fk = Integer.parseInt(request.getParameter("idx_fk"));
             String content = request.getParameter("content");
 
@@ -35,7 +34,7 @@ public class ReplyWriteService implements Action {
                     .step(0)
                     .build();
 
-            ReplyDao dao = new ReplyDao();
+            ReplyDao dao = ReplyDao.getInstance();
             dao.write(reply);
 
             forward.setRedirect(true);
