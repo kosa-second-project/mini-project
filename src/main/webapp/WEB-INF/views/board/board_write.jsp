@@ -29,13 +29,14 @@
         <label>제목
             <input type="text" name="subject" maxlength="100" required>
         </label>
-        <label>내용
-            <textarea name="content" rows="12" required></textarea>
-        </label>
-
-        <section class="map-tools" data-map-mode="form">
-            <button type="button" id="mapToggleBtn" class="map-toggle-btn" data-open-text="지도 닫기" data-closed-text="지도 추가">지도 추가</button>
-            <div id="mapPanel" class="map-panel hidden">
+        <section class="board-editor" data-editor-mode="form">
+            <div class="editor-toolbar">
+                <span class="editor-label">내용</span>
+                <button type="button" id="insertMapBtn" class="map-toggle-btn">지도 삽입</button>
+            </div>
+            <textarea name="content" id="contentInput" class="editor-source" required></textarea>
+            <div id="contentEditor" class="content-editor" contenteditable="true" data-placeholder="내용을 입력하세요"></div>
+            <div id="mapPanel" class="map-panel editor-map-panel hidden">
                 <div id="placeSearchForm" class="place-search-form">
                     <label for="keyword">장소 검색</label>
                     <div class="place-search-row">
@@ -60,7 +61,7 @@
 <jsp:include page="/include/quickMenu.jsp" />
 <c:if test="${not empty kakaoMapKey}">
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapKey}&libraries=services"></script>
-<script src="${pageContext.request.contextPath}/js/board-map.js?v=20260609-map-button"></script>
 </c:if>
+<script src="${pageContext.request.contextPath}/js/board-editor.js?v=20260610-inline-map"></script>
 </body>
 </html>
