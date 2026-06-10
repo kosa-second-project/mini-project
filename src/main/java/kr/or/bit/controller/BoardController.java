@@ -10,7 +10,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.or.bit.action.Action;
 import kr.or.bit.action.ActionForward;
-import kr.or.bit.ajax.BoardListAjax;
 import kr.or.bit.service.board.BoardDeleteFormService;
 import kr.or.bit.service.board.BoardDeleteService;
 import kr.or.bit.service.board.BoardDetailService;
@@ -25,7 +24,6 @@ import kr.or.bit.service.board.ReplyWriteService;
 @WebServlet("*.do")
 public class BoardController extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private static final String DEFAULT_KAKAO_MAP_KEY = "b0c25c0b9a953eb61c5e6b443815f027";
 
     protected void doProcess(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -39,12 +37,8 @@ public class BoardController extends HttpServlet {
         if (urlCommand.equals("/BoardList.do")) {
             action = new BoardListService();
             forward = action.execute(request, response);
-        } else if (urlCommand.equals("/BoardListAjax.do")) {
-            action = new BoardListAjax();
-            forward = action.execute(request, response);
         } else if (urlCommand.equals("/BoardWriteForm.do")) {
             request.setAttribute("loginRequired", false);
-            request.setAttribute("kakaoMapKey", getKakaoMapKey());
             forward = new ActionForward();
             forward.setRedirect(false);
             forward.setPath("/WEB-INF/views/board/board_write.jsp");
@@ -103,13 +97,5 @@ public class BoardController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doProcess(request, response);
-    }
-
-    private String getKakaoMapKey() {
-        String key = System.getProperty("kakao.map.javascript.key");
-        if (key == null || key.trim().isEmpty()) {
-            key = System.getenv("KAKAO_MAP_JAVASCRIPT_KEY");
-        }
-        return key == null || key.trim().isEmpty() ? DEFAULT_KAKAO_MAP_KEY : key;
     }
 }

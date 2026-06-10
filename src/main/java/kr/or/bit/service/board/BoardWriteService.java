@@ -24,19 +24,14 @@ public class BoardWriteService implements Action {
                     .empno(empno)
                     .subject(request.getParameter("subject"))
                     .content(request.getParameter("content"))
-                    .lat(BoardFormUtil.parseFloatOrNull(request, "lat"))
-                    .lng(BoardFormUtil.parseFloatOrNull(request, "lng"))
                     .build();
 
-            BoardDao dao = new BoardDao();
+            BoardDao dao = BoardDao.getInstance();
             int row = dao.write(board);
-            System.out.println("[BoardWrite] empno=" + empno + ", row=" + row);
+
             forward.setRedirect(true);
-            String path = request.getContextPath() + (row > 0 ? "/BoardList.do" : "/BoardWriteForm.do?writeFail=1");
-            System.out.println("[BoardWrite] redirect=" + path);
-            forward.setPath(path);
+            forward.setPath(request.getContextPath() + (row > 0 ? "/BoardList.do" : "/BoardWriteForm.do?writeFail=1"));
         } catch (Exception e) {
-            System.out.println("[BoardWrite] write failed: " + e.getMessage());
             e.printStackTrace();
             forward.setRedirect(true);
             forward.setPath(request.getContextPath() + "/BoardWriteForm.do?writeFail=1");

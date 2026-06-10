@@ -16,7 +16,7 @@ public class BoardListService implements Action {
         ActionForward forward = new ActionForward();
 
         try {
-            BoardDao dao = new BoardDao();
+            BoardDao dao = BoardDao.getInstance();
 
             int totalboardcount = dao.totalBoardCount();
 

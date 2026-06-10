@@ -23,29 +23,26 @@ public class BoardEditService implements Action {
                 return forward;
             }
 
-            BoardDao dao = new BoardDao();
+            BoardDao dao = BoardDao.getInstance();
             Board original = dao.getContent(idx);
-//            if (empno == null || original == null || original.isDeleted() || original.getEmpno() != empno
-//                    || !new EmpService().validatePassword(empno, password)) {
-//                request.setAttribute("message", "로그인 사원 정보 또는 비밀번호가 일치하지 않습니다.");
-//                BoardFormUtil.setKakaoMapKey(request);
-//                request.setAttribute("board", original);
-//                forward.setRedirect(false);
-//                forward.setPath("/WEB-INF/views/board/board_edit.jsp");
-//                return forward;
-//            }
+            if (original == null || original.isDeleted() || original.getEmpno() != empno) {
+                request.setAttribute("message", "본인이 작성한 게시글만 수정할 수 있습니다.");
+                request.setAttribute("board", original);
+                forward.setRedirect(false);
+                forward.setPath("/WEB-INF/views/board/board_edit.jsp");
+                return forward;
+            }
 
             Board board = Board.builder()
                     .idx(idx)
+                    .empno(empno)
                     .subject(request.getParameter("subject"))
                     .content(request.getParameter("content"))
-                    .lat(BoardFormUtil.parseFloatOrNull(request, "lat"))
-                    .lng(BoardFormUtil.parseFloatOrNull(request, "lng"))
                     .build();
-            dao.update(board);
+            int row = dao.update(board);
 
             forward.setRedirect(true);
-            forward.setPath(request.getContextPath() + "/BoardDetail.do?idx=" + idx);
+            forward.setPath(request.getContextPath() + "/BoardDetail.do?idx=" + idx + (row > 0 ? "" : "&editFail=1"));
         } catch (Exception e) {
             e.printStackTrace();
             forward.setRedirect(true);

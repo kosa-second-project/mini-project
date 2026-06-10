@@ -1,10 +1,11 @@
 package kr.or.bit.dto;
 
 import java.util.Date;
-import lombok.Data;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
@@ -23,6 +24,4 @@ public class Board {
     private int depth;
     private int step;
     private boolean deleted;
-    private Float lat; // 위도
-    private Float lng; // 경도
 }

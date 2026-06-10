@@ -34,7 +34,7 @@ public class ReplyWriteService implements Action {
                     .step(0)
                     .build();
 
-            ReplyDao dao = new ReplyDao();
+            ReplyDao dao = ReplyDao.getInstance();
             dao.write(reply);
 
             forward.setRedirect(true);

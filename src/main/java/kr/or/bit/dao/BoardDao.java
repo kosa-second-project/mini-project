@@ -12,6 +12,17 @@ import kr.or.bit.utils.ConnectionHelper;
 import kr.or.bit.utils.DBType;
 
 public class BoardDao {
+    private static BoardDao instance;
+
+    private BoardDao() {
+    }
+
+    public static synchronized BoardDao getInstance() {
+        if (instance == null) {
+            instance = new BoardDao();
+        }
+        return instance;
+    }
 
     public int totalBoardCount() {
         Connection conn = null;
@@ -53,9 +64,9 @@ public class BoardDao {
 
             String sql = "select * from "
                        + "(select rownum rn, idx, empno, ename, deptname, subject, content, writedate, readnum, "
-                       + "        refer, depth, step, deleted, lat, lng "
+                       + "        refer, depth, step, deleted "
                        + " from (select b.idx, b.empno, e.ename, d.deptname, b.subject, b.content, b.writedate, b.readnum, "
-                       + "              b.refer, b.depth, b.step, b.deleted, b.lat, b.lng "
+                       + "              b.refer, b.depth, b.step, b.deleted "
                        + "       from board b "
                        + "       left join emp e on b.empno = e.empno "
                        + "       left join dept d on e.deptno = d.deptno "
@@ -99,7 +110,7 @@ public class BoardDao {
             conn = ConnectionHelper.getConnection(DBType.ORACLE);
 
             String sql = "select b.idx, b.empno, e.ename, d.deptname, b.subject, b.content, b.writedate, b.readnum, "
-                       + "       b.refer, b.depth, b.step, b.deleted, b.lat, b.lng "
+                       + "       b.refer, b.depth, b.step, b.deleted "
                        + "from board b "
                        + "left join emp e on b.empno = e.empno "
                        + "left join dept d on e.deptno = d.deptno "
@@ -161,8 +172,8 @@ public class BoardDao {
             conn = ConnectionHelper.getConnection(DBType.ORACLE);
 
             String sql = "insert into board(idx, empno, subject, content, writedate, readnum, "
-                       + "                  refer, depth, step, deleted, lat, lng) "
-                       + "values(board_seq.nextval, ?, ?, ?, sysdate, 0, ?, ?, ?, 0, ?, ?)";
+                       + "                  refer, depth, step, deleted) "
+                       + "values(board_seq.nextval, ?, ?, ?, sysdate, 0, ?, ?, ?, 0)";
 
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, board.getEmpno());
@@ -171,8 +182,6 @@ public class BoardDao {
             pstmt.setInt(4, board.getRefer());
             pstmt.setInt(5, board.getDepth());
             pstmt.setInt(6, board.getStep());
-            setNullableFloat(pstmt, 7, board.getLat());
-            setNullableFloat(pstmt, 8, board.getLng());
 
             row = pstmt.executeUpdate();
 
@@ -195,15 +204,14 @@ public class BoardDao {
             conn = ConnectionHelper.getConnection(DBType.ORACLE);
 
             String sql = "update board "
-                       + "set subject = ?, content = ?, lat = ?, lng = ? "
-                       + "where idx = ? and deleted = 0";
+                       + "set subject = ?, content = ? "
+                       + "where idx = ? and empno = ? and deleted = 0";
 
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, board.getSubject());
             pstmt.setString(2, board.getContent());
-            setNullableFloat(pstmt, 3, board.getLat());
-            setNullableFloat(pstmt, 4, board.getLng());
-            pstmt.setInt(5, board.getIdx());
+            pstmt.setInt(3, board.getIdx());
+            pstmt.setInt(4, board.getEmpno());
 
             row = pstmt.executeUpdate();
 
@@ -217,7 +225,7 @@ public class BoardDao {
         return row;
     }
 
-    public int delete(int idx) {
+    public int delete(int idx, int empno) {
         Connection conn = null;
         PreparedStatement pstmt = null;
         int row = 0;
@@ -225,9 +233,10 @@ public class BoardDao {
         try {
             conn = ConnectionHelper.getConnection(DBType.ORACLE);
 
-            String sql = "update board set deleted = 1 where idx = ?";
+            String sql = "update board set deleted = 1 where idx = ? and empno = ? and deleted = 0";
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, idx);
+            pstmt.setInt(2, empno);
 
             row = pstmt.executeUpdate();
 
@@ -242,9 +251,6 @@ public class BoardDao {
     }
 
     private Board mapBoard(ResultSet rs) throws SQLException {
-        Float lat = rs.getObject("lat") == null ? null : rs.getFloat("lat");
-        Float lng = rs.getObject("lng") == null ? null : rs.getFloat("lng");
-
         return Board.builder()
                 .idx(rs.getInt("idx"))
                 .empno(rs.getInt("empno"))
@@ -258,16 +264,6 @@ public class BoardDao {
                 .depth(rs.getInt("depth"))
                 .step(rs.getInt("step"))
                 .deleted(rs.getInt("deleted") == 1)
-                .lat(lat)
-                .lng(lng)
                 .build();
-    }
-
-    private void setNullableFloat(PreparedStatement pstmt, int index, Float value) throws SQLException {
-        if (value == null) {
-            pstmt.setNull(index, java.sql.Types.FLOAT);
-        } else {
-            pstmt.setFloat(index, value);
-        }
     }
 }

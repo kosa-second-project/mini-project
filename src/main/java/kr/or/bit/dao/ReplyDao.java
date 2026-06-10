@@ -11,6 +11,17 @@ import kr.or.bit.utils.ConnectionHelper;
 import kr.or.bit.utils.DBType;
 
 public class ReplyDao {
+    private static ReplyDao instance;
+
+    private ReplyDao() {
+    }
+
+    public static synchronized ReplyDao getInstance() {
+        if (instance == null) {
+            instance = new ReplyDao();
+        }
+        return instance;
+    }
 
     public List<Reply> list(int idx_fk) {
         Connection conn = null;
