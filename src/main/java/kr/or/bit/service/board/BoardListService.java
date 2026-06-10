@@ -8,7 +8,6 @@ import kr.or.bit.action.Action;
 import kr.or.bit.action.ActionForward;
 import kr.or.bit.dao.BoardDao;
 import kr.or.bit.dto.Board;
-import kr.or.bit.utils.ThePager;
 
 public class BoardListService implements Action {
 
@@ -34,19 +33,30 @@ public class BoardListService implements Action {
 
             int pagesize = Integer.parseInt(ps);
             int cpage = Integer.parseInt(cp);
+
+            if (pagesize <= 0) {
+                pagesize = 5;
+            }
+
             int pagecount = totalboardcount % pagesize == 0
                     ? totalboardcount / pagesize
                     : (totalboardcount / pagesize) + 1;
 
+            if (cpage < 1) {
+                cpage = 1;
+            }
+
+            if (pagecount > 0 && cpage > pagecount) {
+                cpage = pagecount;
+            }
+
             List<Board> list = dao.list(cpage, pagesize);
-            ThePager pager = new ThePager(totalboardcount, cpage, pagesize, 3, "BoardList.do");
 
             request.setAttribute("totalboardcount", totalboardcount);
             request.setAttribute("pagesize", pagesize);
             request.setAttribute("cpage", cpage);
             request.setAttribute("pagecount", pagecount);
             request.setAttribute("boardList", list);
-            request.setAttribute("pager", pager.toString());
 
             forward.setRedirect(false);
             forward.setPath("/WEB-INF/views/board/board_list.jsp");

@@ -16,7 +16,8 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <!-- 캐시 방지 적용한 스타일시트 링크 -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/weather.css?v=<%=System.currentTimeMillis()%>">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/folioone-theme.css?v=<%=System.currentTimeMillis()%>">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/weather.css?v=<%=System.currentTimeMillis()%>">
 </head>
 <body>
 

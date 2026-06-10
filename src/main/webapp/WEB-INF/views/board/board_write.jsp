@@ -4,10 +4,14 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>게시글 작성</title>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/style/board.css?v=20260609-map-button">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/vendor/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/vendor/bootstrap-icons/bootstrap-icons.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/folioone-theme.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/board.css?v=20260609-map-button">
 </head>
-<body>
+<body class="app-shell">
 <c:if test="${loginRequired}">
     <input type="checkbox" id="loginModalToggle" class="modal-toggle" checked>
     <div class="modal-backdrop">

@@ -5,80 +5,73 @@
 <c:set var="loginEmpno" value="${sessionScope.loginUser.empno}" />
 <c:set var="boardIdx" value="${not empty board ? board.idx : idx}" />
 
-<section id="replySection" style="margin-top: 40px; border-top: 1px solid #222;">
-    <div style="display: flex; align-items: center; justify-content: space-between; padding: 18px 0 12px;">
-        <h3 style="margin: 0; font-size: 18px; font-weight: 700;">
-            &#45843;&#44544; <span style="color: #03c75a;"><c:out value="${fn:length(replyList)}"/></span>
-        </h3>
+<section id="replySection" class="reply-section mt-5 pt-3">
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <h3 class="reply-title mb-0">댓글 <span class="reply-count"><c:out value="${fn:length(replyList)}"/></span></h3>
     </div>
 
     <c:choose>
         <c:when test="${not empty loginEmpno}">
-            <form action="ReplyWrite.do" method="post" style="margin: 0 0 10px; padding: 16px; border: 1px solid #ddd; border-radius: 6px; background: #fff;">
+            <form action="ReplyWrite.do" method="post" class="reply-write-form d-flex gap-3 mb-3 p-3 border rounded-2">
                 <input type="hidden" name="idx_fk" value="${boardIdx}">
 
-                <div style="display: flex; gap: 12px;">
-                    <div style="width: 38px; height: 38px; border-radius: 50%; background: #f1f3f5; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #555; flex-shrink: 0;">
-                        <c:out value="${loginEmpno}"/>
-                    </div>
-                    <div style="flex: 1;">
-                        <div style="margin-bottom: 8px; font-size: 13px; font-weight: 700;">&#49324;&#48264; <c:out value="${loginEmpno}"/></div>
-                        <textarea name="content" rows="3" placeholder="&#45843;&#44544;&#51012; &#51077;&#47141;&#54616;&#49464;&#50836;" required
-                            style="width: 100%; box-sizing: border-box; resize: vertical; border: 1px solid #ddd; border-radius: 4px; padding: 10px; font-size: 14px; line-height: 1.5; outline: none;"></textarea>
-                        <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
-                            <button type="submit" style="border: 0; border-radius: 4px; background: #03c75a; color: #fff; padding: 8px 18px; font-size: 14px; font-weight: 700; cursor: pointer;">&#46321;&#47197;</button>
-                        </div>
+                <div class="reply-avatar"><c:out value="${loginEmpno}"/></div>
+                <div class="flex-grow-1 min-w-0">
+                    <div class="fw-bold small mb-2">사번 <c:out value="${loginEmpno}"/></div>
+                    <textarea name="content" rows="3" class="form-control reply-textarea" placeholder="댓글을 입력하세요" required></textarea>
+                    <div class="d-flex justify-content-end mt-2">
+                        <button type="submit" class="btn btn-primary btn-sm">등록</button>
                     </div>
                 </div>
             </form>
         </c:when>
         <c:otherwise>
-            <div style="margin: 0 0 10px; padding: 16px; border: 1px solid #ddd; border-radius: 6px; background: #fff; color: #777; font-size: 14px;">
-                &#47196;&#44536;&#51064; &#54980; &#45843;&#44544;&#51012; &#51089;&#49457;&#54624; &#49688; &#51080;&#49845;&#45768;&#45796;.
-            </div>
+            <div class="reply-login-message mb-3 p-3 border rounded-2 text-muted">로그인 후 댓글을 작성할 수 있습니다.</div>
         </c:otherwise>
     </c:choose>
 
-    <div>
+    <div class="reply-list">
         <c:choose>
             <c:when test="${not empty replyList}">
                 <c:forEach var="reply" items="${replyList}">
-                    <article class="reply-item" style="display: flex; gap: 12px; padding: 18px 0; border-bottom: 1px solid #eee;">
-                        <div style="width: 38px; height: 38px; border-radius: 50%; background: #f1f3f5; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #555; flex-shrink: 0;">
-                            <c:out value="${reply.empno}"/>
-                        </div>
+                    <article class="reply-item d-flex gap-3 py-3 border-bottom">
+                        <div class="reply-avatar"><c:out value="${reply.empno}"/></div>
 
-                        <div style="flex: 1; min-width: 0;">
-                            <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px;">
-                                <strong style="font-size: 14px;">&#49324;&#48264; <c:out value="${reply.empno}"/></strong>
-                                <span style="font-size: 12px; color: #888;"><c:out value="${reply.writedate}"/></span>
+                        <div class="flex-grow-1 min-w-0">
+                            <div class="d-flex align-items-baseline gap-2 mb-1">
+                                <strong class="small">사번 <c:out value="${reply.empno}"/></strong>
+                                <span class="text-muted small"><c:out value="${reply.writedate}"/></span>
                             </div>
 
                             <div class="reply-view">
-                                <p class="reply-content" style="margin: 0 0 8px; font-size: 14px; line-height: 1.6; color: #222; white-space: pre-wrap;"><c:out value="${reply.content}"/></p>
+                                <p class="reply-content mb-2"><c:out value="${reply.content}"/></p>
 
                                 <c:if test="${not empty loginEmpno and reply.empno == loginEmpno}">
-                                    <div class="reply-actions" style="display: flex; align-items: center; gap: 7px; font-size: 13px;">
-                                        <button type="button" class="reply-edit-open" style="border: 0; background: transparent; padding: 0; color: #666; cursor: pointer;">&#49688;&#51221;</button>
-                                        <span style="color: #ddd;">|</span>
-                                        <form action="ReplyDelete.do" method="post" style="display: inline; margin: 0;">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <button type="button" class="btn btn-link btn-sm reply-action-btn reply-edit-open">
+                                            <i class="bi bi-pencil-square"></i>
+                                            수정
+                                        </button>
+                                        <form action="ReplyDelete.do" method="post" class="m-0">
                                             <input type="hidden" name="no" value="${reply.no}">
                                             <input type="hidden" name="idx_fk" value="${boardIdx}">
-                                            <button type="submit" style="border: 0; background: transparent; padding: 0; color: #666; cursor: pointer;">&#49325;&#51228;</button>
+                                            <button type="submit" class="btn btn-link btn-sm reply-action-btn reply-danger-btn">
+                                                <i class="bi bi-trash3"></i>
+                                                삭제
+                                            </button>
                                         </form>
                                     </div>
                                 </c:if>
                             </div>
 
                             <c:if test="${not empty loginEmpno and reply.empno == loginEmpno}">
-                                <form action="ReplyUpdate.do" method="post" class="reply-edit-form" hidden style="margin: 0;">
+                                <form action="ReplyUpdate.do" method="post" class="reply-edit-form" hidden>
                                     <input type="hidden" name="no" value="${reply.no}">
                                     <input type="hidden" name="idx_fk" value="${boardIdx}">
-                                    <textarea name="content" rows="3" required
-                                        style="width: 100%; box-sizing: border-box; resize: vertical; border: 1px solid #ddd; border-radius: 4px; padding: 10px; font-size: 14px; line-height: 1.5; outline: none;"><c:out value="${reply.content}"/></textarea>
-                                    <div style="display: flex; justify-content: flex-end; gap: 6px; margin-top: 8px;">
-                                        <button type="button" class="reply-edit-cancel" style="border: 1px solid #ddd; border-radius: 4px; background: #fff; color: #333; padding: 7px 14px; font-size: 13px; cursor: pointer;">&#52712;&#49548;</button>
-                                        <button type="submit" style="border: 0; border-radius: 4px; background: #03c75a; color: #fff; padding: 7px 14px; font-size: 13px; font-weight: 700; cursor: pointer;">&#49688;&#51221;</button>
+                                    <textarea name="content" rows="3" class="form-control reply-textarea" required><c:out value="${reply.content}"/></textarea>
+                                    <div class="d-flex justify-content-end gap-2 mt-2">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm reply-edit-cancel">취소</button>
+                                        <button type="submit" class="btn btn-primary btn-sm">저장</button>
                                     </div>
                                 </form>
                             </c:if>
@@ -87,9 +80,7 @@
                 </c:forEach>
             </c:when>
             <c:otherwise>
-                <div style="padding: 36px 0; border-bottom: 1px solid #eee; text-align: center; color: #888; font-size: 14px;">
-                    &#46321;&#47197;&#46108; &#45843;&#44544;&#51060; &#50630;&#49845;&#45768;&#45796;.
-                </div>
+                <div class="reply-empty py-4 border-bottom text-center text-muted">등록된 댓글이 없습니다.</div>
             </c:otherwise>
         </c:choose>
     </div>
