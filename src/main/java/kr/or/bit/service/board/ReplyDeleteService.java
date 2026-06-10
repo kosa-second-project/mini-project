@@ -24,7 +24,7 @@ public class ReplyDeleteService implements Action {
             int no = Integer.parseInt(request.getParameter("no"));
             int idx_fk = Integer.parseInt(request.getParameter("idx_fk"));
 
-            ReplyDao dao = new ReplyDao();
+            ReplyDao dao = ReplyDao.getInstance();
             dao.delete(no, loginUser.getEmpno());
 
             forward.setRedirect(true);

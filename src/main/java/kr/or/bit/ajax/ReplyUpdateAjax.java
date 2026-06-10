@@ -25,7 +25,7 @@ public class ReplyUpdateAjax extends HttpServlet {
 
         Emp loginUser = SessionUtil.getLoginUser(request);
         if (loginUser == null) {
-            out.print("{\"status\":\"fail\",\"message\":\"로그인 후 댓글을 수정할 수 있습니다.\"}");
+            out.print("{\"status\":\"fail\",\"message\":\"로그인해야 댓글을 수정할 수 있습니다.\"}");
             return;
         }
 
@@ -44,7 +44,7 @@ public class ReplyUpdateAjax extends HttpServlet {
                 .content(content.trim())
                 .build();
 
-        ReplyDao dao = new ReplyDao();
+        ReplyDao dao = ReplyDao.getInstance();
         int row = dao.update(reply);
 
         if (row <= 0) {
@@ -66,6 +66,8 @@ public class ReplyUpdateAjax extends HttpServlet {
                 json.append("{");
                 json.append("\"no\":").append(r.getNo()).append(",");
                 json.append("\"empno\":").append(r.getEmpno()).append(",");
+                json.append("\"ename\":\"").append(r.getEname() == null ? "" : r.getEname().replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n")).append("\",");
+                json.append("\"deptname\":\"").append(r.getDeptname() == null ? "" : r.getDeptname().replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n")).append("\",");
                 json.append("\"content\":\"").append(r.getContent() == null ? "" : r.getContent().replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n")).append("\",");
                 json.append("\"writedate\":\"").append(r.getWritedate()).append("\",");
                 json.append("\"idx_fk\":").append(r.getIdx_fk()).append(",");

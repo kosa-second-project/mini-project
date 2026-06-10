@@ -1,25 +1,31 @@
 package kr.or.bit.ajax;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import kr.or.bit.action.Action;
-import kr.or.bit.action.ActionForward;
 import kr.or.bit.dao.BoardDao;
 import kr.or.bit.dto.Board;
 
-public class BoardListAjax implements Action {
+@WebServlet("/BoardListAjax.do")
+public class BoardListAjax extends HttpServlet {
+    private static final long serialVersionUID = 1L;
     private static final int DEFAULT_PAGE_SIZE = 5;
     private static final int PAGER_SIZE = 5;
 
-    @Override
-    public ActionForward execute(HttpServletRequest request, HttpServletResponse response) {
+    protected void doProcess(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         response.setContentType("application/json;charset=UTF-8");
+        PrintWriter out = response.getWriter();
 
         try {
-            BoardDao dao = new BoardDao();
+            BoardDao dao = BoardDao.getInstance();
             int totalboardcount = dao.totalBoardCount();
             int pagesize = parsePositiveInt(request.getParameter("ps"), DEFAULT_PAGE_SIZE);
             int pagecount = calculatePageCount(totalboardcount, pagesize);
@@ -30,17 +36,24 @@ public class BoardListAjax implements Action {
             }
 
             List<Board> boardList = dao.list(cpage, pagesize);
-            response.getWriter().write(toJson(boardList, totalboardcount, cpage, pagesize, pagecount));
+            out.print(toJson(boardList, totalboardcount, cpage, pagesize, pagecount));
         } catch (Exception e) {
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            try {
-                response.getWriter().write("{\"success\":false,\"message\":\"Board list load failed.\"}");
-            } catch (Exception ignore) {
-            }
+            out.print("{\"success\":false,\"message\":\"게시글 목록을 불러오지 못했습니다.\"}");
         }
+    }
 
-        return null;
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doProcess(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doProcess(request, response);
     }
 
     private int parsePositiveInt(String value, int defaultValue) {
@@ -80,9 +93,6 @@ public class BoardListAjax implements Action {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             for (int i = 0; i < boardList.size(); i++) {
                 Board board = boardList.get(i);
-                if (i > 0) {
-                    json.append(",");
-                }
                 json.append("{");
                 json.append("\"idx\":").append(board.getIdx()).append(",");
                 json.append("\"empno\":").append(board.getEmpno()).append(",");
@@ -94,11 +104,11 @@ public class BoardListAjax implements Action {
                         .append("\",");
                 json.append("\"readnum\":").append(board.getReadnum());
                 json.append("}");
+                if (i < boardList.size() - 1) json.append(",");
             }
         }
 
-        json.append("]");
-        json.append("}");
+        json.append("]}");
         return json.toString();
     }
 
@@ -114,40 +124,9 @@ public class BoardListAjax implements Action {
             return "";
         }
 
-        StringBuilder escaped = new StringBuilder();
-        for (int i = 0; i < value.length(); i++) {
-            char ch = value.charAt(i);
-            switch (ch) {
-                case '"':
-                    escaped.append("\\\"");
-                    break;
-                case '\\':
-                    escaped.append("\\\\");
-                    break;
-                case '\b':
-                    escaped.append("\\b");
-                    break;
-                case '\f':
-                    escaped.append("\\f");
-                    break;
-                case '\n':
-                    escaped.append("\\n");
-                    break;
-                case '\r':
-                    escaped.append("\\r");
-                    break;
-                case '\t':
-                    escaped.append("\\t");
-                    break;
-                default:
-                    if (ch < 32) {
-                        escaped.append(String.format("\\u%04x", (int) ch));
-                    } else {
-                        escaped.append(ch);
-                    }
-                    break;
-            }
-        }
-        return escaped.toString();
+        return value.replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\r", "\\r")
+                .replace("\n", "\\n");
     }
 }

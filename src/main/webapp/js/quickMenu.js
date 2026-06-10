@@ -17,21 +17,26 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function onHomeClick() {
-    var path = (window.contextPath || "") + "/Main.emp";
+    var path = getContextPath() + "/Main.emp";
     location.href = path;
 }
 
 function onBoardClick() {
-    var path = (window.contextPath || "") + "/BoardList.do";
+    var path = getContextPath() + "/BoardList.do";
     location.href = path;
 }
 
 function onWeatherClick() {
-    var path = (window.contextPath || "") + "/Weather.do";
+    var path = getContextPath() + "/Weather.do";
     location.href = path;
 }
 
 function onPathClick() {
-    var path = (window.contextPath || "") + "/Subway.do";
+    var path = getContextPath() + "/Subway.do";
     location.href = path;
+}
+
+function getContextPath() {
+    var wrapper = document.getElementById("quickMenuWrapper");
+    return wrapper ? wrapper.dataset.contextPath || "" : "";
 }

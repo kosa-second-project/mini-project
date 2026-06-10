@@ -1,12 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/quickMenu.css?v=<%=System.currentTimeMillis()%>">
-<script>
-    window.contextPath = "${pageContext.request.contextPath}";
-</script>
 <script src="${pageContext.request.contextPath}/js/quickMenu.js?v=<%=System.currentTimeMillis()%>" defer></script>
 
-<div class="quick-menu-wrapper" id="quickMenuWrapper">
+<div class="quick-menu-wrapper" id="quickMenuWrapper" data-context-path="${pageContext.request.contextPath}">
     <ul class="quick-menu-list">
         <li>
             <div class="quick-menu-item-wrapper">

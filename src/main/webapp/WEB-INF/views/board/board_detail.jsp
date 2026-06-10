@@ -1,16 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>게시글 상세</title>
-<link href="${pageContext.request.contextPath}/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-<link href="${pageContext.request.contextPath}/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-<link href="${pageContext.request.contextPath}/assets/css/folioone-theme.css" rel="stylesheet">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/board.css?v=20260609-map-layout">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reply.css">
-</head>
+<jsp:include page="/include/header.jsp">
+    <jsp:param name="pageTitle" value="게시글 상세" />
+    <jsp:param name="pageCss" value="/assets/css/board.css" />
+    <jsp:param name="pageCss2" value="/assets/css/reply.css" />
+</jsp:include>
 <body class="app-shell">
 <main class="board-page">
     <c:choose>
@@ -31,8 +25,10 @@
                 <div id="boardContent" class="content rich-content" data-editor-mode="detail"></div>
 
                 <div class="actions">
-                    <a href="${pageContext.request.contextPath}/BoardEditForm.do?idx=${board.idx}">수정</a>
-                    <a href="${pageContext.request.contextPath}/BoardDeleteForm.do?idx=${board.idx}">삭제</a>
+                    <c:if test="${not empty sessionScope.loginUser and sessionScope.loginUser.empno == board.empno}">
+                        <a href="${pageContext.request.contextPath}/BoardEditForm.do?idx=${board.idx}">수정</a>
+                        <a href="${pageContext.request.contextPath}/BoardDeleteForm.do?idx=${board.idx}">삭제</a>
+                    </c:if>
                     <a href="${pageContext.request.contextPath}/BoardList.do">목록</a>
                 </div>
             </article>
@@ -43,10 +39,8 @@
 </main>
 
 <jsp:include page="/include/quickMenu.jsp" />
-<c:if test="${not empty kakaoMapKey}">
-<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapKey}"></script>
-</c:if>
-<script src="${pageContext.request.contextPath}/js/board-editor.js?v=20260610-inline-map"></script>
+<script src="${pageContext.request.contextPath}/js/board-editor.js?v=<%=System.currentTimeMillis()%>"></script>
+<script src="${pageContext.request.contextPath}/js/reply.js?v=<%=System.currentTimeMillis()%>"></script>
 <script src="${pageContext.request.contextPath}/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

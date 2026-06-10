@@ -32,7 +32,7 @@ public class ReplyUpdateService implements Action {
                     .content(content)
                     .build();
 
-            ReplyDao dao = new ReplyDao();
+            ReplyDao dao = ReplyDao.getInstance();
             dao.update(reply);
 
             forward.setRedirect(true);
