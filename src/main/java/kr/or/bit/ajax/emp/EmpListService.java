@@ -1,27 +1,24 @@
 package kr.or.bit.ajax.emp;
 
-import java.io.IOException;
 import java.util.List;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import kr.or.bit.action.AjaxAction;
 import kr.or.bit.dao.EmpDao;
 import kr.or.bit.dto.Emp;
+import kr.or.bit.utils.SessionUtil;
 
 public class EmpListService implements AjaxAction {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         response.setContentType("application/json;charset=UTF-8");
         
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("loginUser") == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("{\"status\": \"fail\", \"message\": \"Unauthorized access\"}");
+        Emp loginUser = SessionUtil.getLoginUser(request);
+        if (loginUser == null) {
+            SessionUtil.writeUnauthorizedJson(response, "Unauthorized access");
             return;
         }
 
-        Emp loginUser = (Emp) session.getAttribute("loginUser");
         EmpDao dao = EmpDao.getInstance();
         List<Emp> list;
 
@@ -51,7 +48,7 @@ public class EmpListService implements AjaxAction {
         }
 
         int totalCount = 0;
-        if ("ADMIN".equalsIgnoreCase(loginUser.getRole()) || "대표".equals(loginUser.getPosition())) {
+        if (SessionUtil.isAdminOrRepresentative(loginUser)) {
             totalCount = dao.getEmpCount();
         } else {
             totalCount = dao.getEmpCountByDept(loginUser.getDeptno());
@@ -61,7 +58,7 @@ public class EmpListService implements AjaxAction {
         if (pageCount == 0) pageCount = 1;
         if (cpage > pageCount) cpage = pageCount;
 
-        if ("ADMIN".equalsIgnoreCase(loginUser.getRole()) || "대표".equals(loginUser.getPosition())) {
+        if (SessionUtil.isAdminOrRepresentative(loginUser)) {
             list = dao.getEmpList(cpage, pagesize);
         } else {
             list = dao.getEmpListByDept(loginUser.getDeptno(), cpage, pagesize);

@@ -1,29 +1,25 @@
 package kr.or.bit.ajax.emp;
 
-import java.io.IOException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import kr.or.bit.action.AjaxAction;
 import kr.or.bit.dao.EmpDao;
 import kr.or.bit.dto.Emp;
+import kr.or.bit.utils.SessionUtil;
 
 public class EmpDeleteService implements AjaxAction {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         response.setContentType("application/json;charset=UTF-8");
 
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("loginUser") == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("{\"status\": \"fail\", \"message\": \"로그인이 필요합니다.\"}");
+        Emp loginUser = SessionUtil.getLoginUser(request);
+        if (loginUser == null) {
+            SessionUtil.writeUnauthorizedJson(response, "로그인이 필요합니다.");
             return;
         }
 
-        Emp loginUser = (Emp) session.getAttribute("loginUser");
-        if (!"ADMIN".equalsIgnoreCase(loginUser.getRole()) && !"대표".equals(loginUser.getPosition())) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("{\"status\": \"fail\", \"message\": \"사원 삭제 권한이 없습니다. (대표만 가능)\"}");
+        if (!SessionUtil.isAdminOrRepresentative(loginUser)) {
+            SessionUtil.writeForbiddenJson(response, "사원 삭제 권한이 없습니다.");
             return;
         }
 
@@ -35,7 +31,6 @@ public class EmpDeleteService implements AjaxAction {
 
         int empno = Integer.parseInt(empnoStr.trim());
 
-        // 본인 삭제 방지
         if (loginUser.getEmpno() == empno) {
             response.getWriter().write("{\"status\": \"fail\", \"message\": \"본인 계정은 삭제할 수 없습니다.\"}");
             return;

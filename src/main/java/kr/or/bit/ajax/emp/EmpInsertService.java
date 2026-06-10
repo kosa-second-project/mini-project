@@ -1,12 +1,11 @@
 package kr.or.bit.ajax.emp;
 
-import java.io.IOException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import kr.or.bit.action.AjaxAction;
 import kr.or.bit.dao.EmpDao;
 import kr.or.bit.dto.Emp;
+import kr.or.bit.utils.SessionUtil;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class EmpInsertService implements AjaxAction {
@@ -14,17 +13,14 @@ public class EmpInsertService implements AjaxAction {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         response.setContentType("application/json;charset=UTF-8");
 
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("loginUser") == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("{\"status\": \"fail\", \"message\": \"로그인이 필요합니다.\"}");
+        Emp loginUser = SessionUtil.getLoginUser(request);
+        if (loginUser == null) {
+            SessionUtil.writeUnauthorizedJson(response, "로그인이 필요합니다.");
             return;
         }
 
-        Emp loginUser = (Emp) session.getAttribute("loginUser");
-        if (!"ADMIN".equalsIgnoreCase(loginUser.getRole()) && !"대표".equals(loginUser.getPosition())) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("{\"status\": \"fail\", \"message\": \"사원 등록 권한이 없습니다. (대표만 가능)\"}");
+        if (!SessionUtil.isAdminOrRepresentative(loginUser)) {
+            SessionUtil.writeForbiddenJson(response, "사원 등록 권한이 없습니다.");
             return;
         }
 
@@ -39,10 +35,10 @@ public class EmpInsertService implements AjaxAction {
         String pwd = request.getParameter("pwd");
         String role = request.getParameter("role");
 
-        if (empnoStr == null || empnoStr.trim().isEmpty() ||
-            ename == null || ename.trim().isEmpty() ||
-            pwd == null || pwd.trim().isEmpty()) {
-            response.getWriter().write("{\"status\": \"fail\", \"message\": \"필수 입력 항목(사번, 이름, 비밀번호)이 누락되었습니다.\"}");
+        if (empnoStr == null || empnoStr.trim().isEmpty()
+                || ename == null || ename.trim().isEmpty()
+                || pwd == null || pwd.trim().isEmpty()) {
+            response.getWriter().write("{\"status\": \"fail\", \"message\": \"필수 입력 항목이 누락되었습니다.\"}");
             return;
         }
 
@@ -60,14 +56,12 @@ public class EmpInsertService implements AjaxAction {
             deptno = Integer.parseInt(deptnoStr.trim());
         }
 
-        // 사번 중복 검사
         EmpDao dao = EmpDao.getInstance();
         if (dao.getEmpByEmpno(empno) != null) {
             response.getWriter().write("{\"status\": \"fail\", \"message\": \"이미 존재하는 사원번호입니다.\"}");
             return;
         }
 
-        // 비밀번호 BCrypt 암호화
         String hashedPwd = BCrypt.hashpw(pwd, BCrypt.gensalt());
 
         Emp newEmp = Emp.builder()
@@ -87,7 +81,7 @@ public class EmpInsertService implements AjaxAction {
         if (row > 0) {
             response.getWriter().write("{\"status\": \"success\"}");
         } else {
-            response.getWriter().write("{\"status\": \"fail\", \"message\": \"사원 등록에 실패했습니다. 입력값을 확인해주세요.\"}");
+            response.getWriter().write("{\"status\": \"fail\", \"message\": \"사원 등록에 실패했습니다.\"}");
         }
     }
 }
