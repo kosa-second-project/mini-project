@@ -10,6 +10,7 @@
     var pageSizeForm = document.getElementById("boardPageSizeForm");
     var tbody = document.getElementById("boardListBody");
     var pagination = document.querySelector(".board-pagination");
+    var writeLink = document.querySelector(".board-write-link");
 
     if (!pagination) {
         pagination = document.createElement("nav");
@@ -32,8 +33,25 @@
     }
 
     function writerLabel(board) {
+        if (board.deleted) {
+            return "-";
+        }
         var name = board.ename || board.empno;
         return board.deptname ? name + " (" + board.deptname + ")" : name;
+    }
+
+    function subjectCell(board) {
+        var depth = Number(board.depth || 0);
+        var indent = '<span class="board-reply-indent" style="--reply-depth:' + depth + '"></span>';
+        var marker = depth > 0 ? '<span class="board-reply-marker">↳</span>' : "";
+        if (board.deleted) {
+            return indent + marker + '<span class="board-deleted-title">삭제된 게시판입니다.</span>';
+        }
+        return indent + marker
+            + '<a href="BoardDetail.do?idx=' + encodeURIComponent(board.idx) + '" class="board-title-link">'
+            + escapeHtml(board.subject)
+            + '</a>'
+            + (Number(board.replyCount || 0) > 0 ? ' <span class="board-reply-count">[' + escapeHtml(board.replyCount) + ']</span>' : '');
     }
 
     function renderRows(boardList) {
@@ -46,9 +64,7 @@
             return '<tr>'
                 + '<td>' + escapeHtml(board.idx) + '</td>'
                 + '<td class="text-start">'
-                + '<a href="BoardDetail.do?idx=' + encodeURIComponent(board.idx) + '" class="board-title-link">'
-                + escapeHtml(board.subject)
-                + '</a>'
+                + subjectCell(board)
                 + '</td>'
                 + '<td>' + escapeHtml(writerLabel(board)) + '</td>'
                 + '<td>' + escapeHtml(board.writedate) + '</td>'
@@ -124,6 +140,17 @@
             pageSizeForm.submit();
         });
     });
+
+    if (writeLink) {
+        writeLink.addEventListener("click", function(event) {
+            if (page.dataset.loggedIn === "true") {
+                return;
+            }
+            event.preventDefault();
+            alert(page.dataset.loginMessage || "로그인한 사용자만 글을 작성할 수 있습니다.");
+            window.location.href = page.dataset.loginUrl || (contextPath + "/Login.emp");
+        });
+    }
 
     pagination.addEventListener("click", function(event) {
         var link = event.target.closest("a");

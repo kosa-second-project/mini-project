@@ -59,7 +59,10 @@ public class ReplyDeleteAjax extends HttpServlet {
                 json.append("\"content\":\"").append(r.getContent() == null ? "" : r.getContent().replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n")).append("\",");
                 json.append("\"writedate\":\"").append(r.getWritedate()).append("\",");
                 json.append("\"idx_fk\":").append(r.getIdx_fk()).append(",");
-                json.append("\"canEdit\":").append(loginUser.getEmpno() == r.getEmpno());
+                json.append("\"depth\":").append(r.getDepth()).append(",");
+                json.append("\"deleted\":").append(r.isDeleted()).append(",");
+                json.append("\"canReply\":").append(!r.isDeleted()).append(",");
+                json.append("\"canEdit\":").append(!r.isDeleted() && loginUser.getEmpno() == r.getEmpno());
                 json.append("}");
                 if (i < list.size() - 1) json.append(",");
             }

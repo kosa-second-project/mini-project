@@ -27,7 +27,8 @@ public class BoardWriteService implements Action {
                     .build();
 
             BoardDao dao = BoardDao.getInstance();
-            int row = dao.write(board);
+            int parentIdx = parseParentIdx(request);
+            int row = parentIdx > 0 ? dao.writeReply(parentIdx, board) : dao.write(board);
 
             forward.setRedirect(true);
             forward.setPath(request.getContextPath() + (row > 0 ? "/BoardList.do" : "/BoardWriteForm.do?writeFail=1"));
@@ -37,5 +38,13 @@ public class BoardWriteService implements Action {
             forward.setPath(request.getContextPath() + "/BoardWriteForm.do?writeFail=1");
         }
         return forward;
+    }
+
+    private int parseParentIdx(HttpServletRequest request) {
+        String value = request.getParameter("parentIdx");
+        if (value == null || value.trim().isEmpty()) {
+            return 0;
+        }
+        return Integer.parseInt(value);
     }
 }

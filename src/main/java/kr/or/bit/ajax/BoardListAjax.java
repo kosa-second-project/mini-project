@@ -99,6 +99,9 @@ public class BoardListAjax extends HttpServlet {
                 json.append("\"ename\":\"").append(escapeJson(writerName(board))).append("\",");
                 json.append("\"deptname\":\"").append(escapeJson(board.getDeptname())).append("\",");
                 json.append("\"subject\":\"").append(escapeJson(board.getSubject())).append("\",");
+                json.append("\"replyCount\":").append(board.getReplyCount()).append(",");
+                json.append("\"depth\":").append(board.getDepth()).append(",");
+                json.append("\"deleted\":").append(board.isDeleted()).append(",");
                 json.append("\"writedate\":\"")
                         .append(board.getWritedate() == null ? "" : dateFormat.format(board.getWritedate()))
                         .append("\",");

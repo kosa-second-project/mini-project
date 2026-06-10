@@ -35,7 +35,12 @@ public class ReplyWriteService implements Action {
                     .build();
 
             ReplyDao dao = ReplyDao.getInstance();
-            dao.write(reply);
+            int parentNo = parseParentNo(request.getParameter("parentNo"));
+            if (parentNo > 0) {
+                dao.writeReply(parentNo, reply);
+            } else {
+                dao.write(reply);
+            }
 
             forward.setRedirect(true);
             forward.setPath("BoardDetail.do?idx=" + idx_fk);
@@ -45,5 +50,12 @@ public class ReplyWriteService implements Action {
         }
 
         return forward;
+    }
+
+    private int parseParentNo(String value) {
+        if (value == null || value.trim().isEmpty()) {
+            return 0;
+        }
+        return Integer.parseInt(value);
     }
 }

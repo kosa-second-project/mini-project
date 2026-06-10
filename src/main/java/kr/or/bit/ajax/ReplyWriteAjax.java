@@ -30,6 +30,7 @@ public class ReplyWriteAjax extends HttpServlet {
         }
 
         int idx_fk = Integer.parseInt(request.getParameter("idx_fk"));
+        int parentNo = parseParentNo(request.getParameter("parentNo"));
         String content = request.getParameter("content");
 
         if (content == null || content.trim().isEmpty()) {
@@ -47,7 +48,7 @@ public class ReplyWriteAjax extends HttpServlet {
                 .build();
 
         ReplyDao dao = ReplyDao.getInstance();
-        int row = dao.write(reply);
+        int row = parentNo > 0 ? dao.writeReply(parentNo, reply) : dao.write(reply);
 
         if (row <= 0) {
             out.print("{\"status\":\"fail\",\"message\":\"댓글 등록에 실패했습니다.\"}");
@@ -73,7 +74,10 @@ public class ReplyWriteAjax extends HttpServlet {
                 json.append("\"content\":\"").append(r.getContent() == null ? "" : r.getContent().replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n")).append("\",");
                 json.append("\"writedate\":\"").append(r.getWritedate()).append("\",");
                 json.append("\"idx_fk\":").append(r.getIdx_fk()).append(",");
-                json.append("\"canEdit\":").append(loginUser.getEmpno() == r.getEmpno());
+                json.append("\"depth\":").append(r.getDepth()).append(",");
+                json.append("\"deleted\":").append(r.isDeleted()).append(",");
+                json.append("\"canReply\":").append(!r.isDeleted()).append(",");
+                json.append("\"canEdit\":").append(!r.isDeleted() && loginUser.getEmpno() == r.getEmpno());
                 json.append("}");
                 if (i < list.size() - 1) json.append(",");
             }
@@ -81,6 +85,13 @@ public class ReplyWriteAjax extends HttpServlet {
 
         json.append("]}");
         out.print(json.toString());
+    }
+
+    private int parseParentNo(String value) {
+        if (value == null || value.trim().isEmpty()) {
+            return 0;
+        }
+        return Integer.parseInt(value);
     }
 
     @Override

@@ -20,6 +20,13 @@
         }
     }
 
+    function closeChildForm(item) {
+        var form = item ? item.querySelector(".reply-child-form") : null;
+        if (form) {
+            form.hidden = true;
+        }
+    }
+
     function escapeHtml(value) {
         return String(value || "")
             .replace(/&/g, "&amp;")
@@ -44,32 +51,60 @@
     }
 
     function replyTemplate(reply) {
-        var content = escapeHtml(reply.content);
+        var deleted = reply.deleted === true;
+        var content = deleted ? "삭제된 댓글입니다." : escapeHtml(reply.content);
         var writerName = escapeHtml(reply.ename || reply.empno);
+        var avatar = deleted ? "-" : writerName;
         var deptname = reply.deptname ? " (" + escapeHtml(reply.deptname) + ")" : "";
+        var meta = "";
         var actions = "";
+        var childForm = "";
         var editForm = "";
 
-        if (reply.canEdit) {
-            actions =
-                '<div class="d-flex align-items-center gap-2">' +
-                    '<button type="button" class="btn btn-link btn-sm reply-action-btn reply-edit-open">' +
-                        '<i class="bi bi-pencil-square"></i> 수정' +
-                    '</button>' +
-                    '<form action="ReplyDelete.do" method="post" class="reply-delete-form m-0" data-ajax-url="' + section.dataset.deleteUrl + '">' +
-                        '<input type="hidden" name="no" value="' + reply.no + '">' +
-                        '<input type="hidden" name="idx_fk" value="' + reply.idx_fk + '">' +
-                        '<button type="submit" class="btn btn-link btn-sm reply-action-btn reply-danger-btn">' +
-                            '<i class="bi bi-trash3"></i> 삭제' +
-                        '</button>' +
-                    '</form>' +
+        if (!deleted) {
+            meta =
+                '<div class="d-flex align-items-baseline gap-2 mb-1">' +
+                    '<strong class="small">' + writerName + deptname + '</strong>' +
+                    '<span class="text-muted small">' + escapeHtml(reply.writedate) + '</span>' +
                 '</div>';
+        }
+
+        if (reply.canReply) {
+            actions +=
+                '<button type="button" class="btn btn-link btn-sm reply-action-btn reply-child-open">' +
+                    '<i class="bi bi-reply"></i> 답글' +
+                '</button>';
+
+            childForm =
+                '<form action="ReplyWrite.do" method="post" class="reply-child-form mt-2" data-ajax-url="' + section.dataset.writeUrl + '" hidden>' +
+                    '<input type="hidden" name="idx_fk" value="' + reply.idx_fk + '">' +
+                    '<input type="hidden" name="parentNo" value="' + reply.no + '">' +
+                    '<textarea name="content" rows="2" class="form-control reply-textarea" placeholder="답글을 입력하세요." required></textarea>' +
+                    '<div class="d-flex justify-content-end gap-2 mt-2">' +
+                        '<button type="button" class="btn btn-outline-secondary btn-sm reply-child-cancel">취소</button>' +
+                        '<button type="submit" class="btn btn-primary btn-sm">등록</button>' +
+                    '</div>' +
+                '</form>';
+        }
+
+        if (reply.canEdit) {
+            actions +=
+                '<button type="button" class="btn btn-link btn-sm reply-action-btn reply-edit-open">' +
+                    '<i class="bi bi-pencil-square"></i> 수정' +
+                '</button>' +
+                '<form action="ReplyDelete.do" method="post" class="reply-delete-form m-0" data-ajax-url="' + section.dataset.deleteUrl + '">' +
+                    '<input type="hidden" name="no" value="' + reply.no + '">' +
+                    '<input type="hidden" name="idx_fk" value="' + reply.idx_fk + '">' +
+                    '<button type="submit" class="btn btn-link btn-sm reply-action-btn reply-danger-btn">' +
+                        '<i class="bi bi-trash3"></i> 삭제' +
+                    '</button>' +
+                '</form>';
 
             editForm =
                 '<form action="ReplyUpdate.do" method="post" class="reply-edit-form" data-ajax-url="' + section.dataset.updateUrl + '" hidden>' +
                     '<input type="hidden" name="no" value="' + reply.no + '">' +
                     '<input type="hidden" name="idx_fk" value="' + reply.idx_fk + '">' +
-                    '<textarea name="content" rows="3" class="form-control reply-textarea" required>' + content + '</textarea>' +
+                    '<textarea name="content" rows="3" class="form-control reply-textarea" required>' + escapeHtml(reply.content) + '</textarea>' +
                     '<div class="d-flex justify-content-end gap-2 mt-2">' +
                         '<button type="button" class="btn btn-outline-secondary btn-sm reply-edit-cancel">취소</button>' +
                         '<button type="submit" class="btn btn-primary btn-sm">저장</button>' +
@@ -78,17 +113,15 @@
         }
 
         return '' +
-            '<article class="reply-item d-flex gap-3 py-3 border-bottom">' +
-                '<div class="reply-avatar">' + writerName + '</div>' +
+            '<article class="reply-item d-flex gap-3 py-3 border-bottom" style="--reply-depth:' + Number(reply.depth || 0) + '">' +
+                '<div class="reply-avatar">' + avatar + '</div>' +
                 '<div class="flex-grow-1 min-w-0">' +
-                    '<div class="d-flex align-items-baseline gap-2 mb-1">' +
-                        '<strong class="small">' + writerName + deptname + '</strong>' +
-                        '<span class="text-muted small">' + escapeHtml(reply.writedate) + '</span>' +
-                    '</div>' +
+                    meta +
                     '<div class="reply-view">' +
-                        '<p class="reply-content mb-2">' + content + '</p>' +
-                        actions +
+                        '<p class="reply-content mb-2' + (deleted ? ' reply-deleted-content' : '') + '">' + content + '</p>' +
+                        (actions ? '<div class="d-flex align-items-center gap-2">' + actions + '</div>' : '') +
                     '</div>' +
+                    childForm +
                     editForm +
                 '</div>' +
             '</article>';
@@ -108,6 +141,27 @@
     }
 
     section.addEventListener("click", function(event) {
+        var childButton = event.target.closest(".reply-child-open");
+        if (childButton) {
+            section.querySelectorAll(".reply-child-form").forEach(function(form) {
+                form.hidden = true;
+            });
+
+            var childItem = childButton.closest(".reply-item");
+            var childForm = childItem.querySelector(".reply-child-form");
+            if (childForm) {
+                childForm.hidden = false;
+                childForm.querySelector("textarea").focus();
+            }
+            return;
+        }
+
+        var childCancelButton = event.target.closest(".reply-child-cancel");
+        if (childCancelButton) {
+            closeChildForm(childCancelButton.closest(".reply-item"));
+            return;
+        }
+
         var openButton = event.target.closest(".reply-edit-open");
         if (openButton) {
             section.querySelectorAll(".reply-item").forEach(closeEdit);
@@ -148,7 +202,7 @@
 
             renderReplies(data);
 
-            if (form.classList.contains("reply-write-form")) {
+            if (form.classList.contains("reply-write-form") || form.classList.contains("reply-child-form")) {
                 form.reset();
             }
         }).catch(function(error) {

@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.or.bit.action.Action;
 import kr.or.bit.action.ActionForward;
+import kr.or.bit.dao.BoardDao;
+import kr.or.bit.dto.Board;
 import kr.or.bit.service.board.BoardDeleteFormService;
 import kr.or.bit.service.board.BoardDeleteService;
 import kr.or.bit.service.board.BoardDetailService;
@@ -21,6 +23,7 @@ import kr.or.bit.service.board.BoardWriteService;
 import kr.or.bit.service.board.ReplyDeleteService;
 import kr.or.bit.service.board.ReplyUpdateService;
 import kr.or.bit.service.board.ReplyWriteService;
+import kr.or.bit.utils.SessionUtil;
 
 @WebServlet("*.do")
 public class BoardController extends HttpServlet {
@@ -39,8 +42,21 @@ public class BoardController extends HttpServlet {
             action = new BoardListService();
             forward = action.execute(request, response);
         } else if (urlCommand.equals("/BoardWriteForm.do")) {
+            if (SessionUtil.getLoginEmpno(request) == null) {
+                sendLoginRequiredAlert(response, request.getContextPath() + "/Login.emp");
+                return;
+            }
             request.setAttribute("loginRequired", false);
             BoardFormUtil.setKakaoMapKey(request);
+            String parentIdx = request.getParameter("parentIdx");
+            if (parentIdx != null && !parentIdx.trim().isEmpty()) {
+                Board parentBoard = BoardDao.getInstance().getContent(Integer.parseInt(parentIdx));
+                if (parentBoard == null) {
+                    response.sendRedirect(request.getContextPath() + "/BoardList.do");
+                    return;
+                }
+                request.setAttribute("parentBoard", parentBoard);
+            }
             forward = new ActionForward();
             forward.setRedirect(false);
             forward.setPath("/WEB-INF/views/board/board_write.jsp");
@@ -99,5 +115,15 @@ public class BoardController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doProcess(request, response);
+    }
+
+    private void sendLoginRequiredAlert(HttpServletResponse response, String loginUrl) throws IOException {
+        response.setContentType("text/html; charset=UTF-8");
+        response.getWriter().write("<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head><body>"
+                + "<script>"
+                + "alert('로그인한 사용자만 글을 작성할 수 있습니다.');"
+                + "location.href='" + loginUrl + "';"
+                + "</script>"
+                + "</body></html>");
     }
 }

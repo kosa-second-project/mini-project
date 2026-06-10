@@ -25,13 +25,17 @@
     if (endPage > pagecount) endPage = pagecount;
 %>
 
-<div class="container mt-5 board-list-page" data-context-path="${pageContext.request.contextPath}">
+<div class="container mt-5 board-list-page"
+     data-context-path="${pageContext.request.contextPath}"
+     data-login-url="${pageContext.request.contextPath}/Login.emp"
+     data-login-message="로그인한 사용자만 글을 작성할 수 있습니다."
+     data-logged-in="${boardWriteAllowed}">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
             <h2 class="mb-1">게시글 목록</h2>
             <span class="text-muted" id="boardListStatus">전체 <%= totalboardcount %>건 / 현재 <%= cpage %>페이지</span>
         </div>
-        <a href="BoardWriteForm.do" class="btn btn-primary">글쓰기</a>
+        <a href="BoardWriteForm.do" class="btn btn-primary board-write-link">글쓰기</a>
     </div>
 
     <div class="d-flex justify-content-end mb-3">
@@ -65,11 +69,20 @@
                 <tr>
                     <td><%= board.getIdx() %></td>
                     <td class="text-start">
-                        <a href="BoardDetail.do?idx=<%= board.getIdx() %>" class="board-title-link">
-                            <%= board.getSubject() %>
-                        </a>
+                        <span class="board-reply-indent" style="--reply-depth:<%= board.getDepth() %>"></span>
+                        <% if (board.getDepth() > 0) { %><span class="board-reply-marker">↳</span><% } %>
+                        <% if (board.isDeleted()) { %>
+                            <span class="board-deleted-title">삭제된 게시판입니다.</span>
+                        <% } else { %>
+                            <a href="BoardDetail.do?idx=<%= board.getIdx() %>" class="board-title-link">
+                                <%= board.getSubject() %>
+                            </a>
+                            <% if (board.getReplyCount() > 0) { %>
+                                <span class="board-reply-count">[<%= board.getReplyCount() %>]</span>
+                            <% } %>
+                        <% } %>
                     </td>
-                    <td><%= (board.getEname() == null || board.getEname().isEmpty()) ? board.getEmpno() : board.getEname() %><% if (board.getDeptname() != null && !board.getDeptname().isEmpty()) { %> (<%= board.getDeptname() %>)<% } %></td>
+                    <td><% if (board.isDeleted()) { %>-<% } else { %><%= (board.getEname() == null || board.getEname().isEmpty()) ? board.getEmpno() : board.getEname() %><% if (board.getDeptname() != null && !board.getDeptname().isEmpty()) { %> (<%= board.getDeptname() %>)<% } %><% } %></td>
                     <td><%= board.getWritedate() %></td>
                     <td><%= board.getReadnum() %></td>
                 </tr>

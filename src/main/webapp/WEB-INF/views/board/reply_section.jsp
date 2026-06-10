@@ -50,38 +50,59 @@
                     <c:if test="${not empty reply.ename and fn:length(reply.ename) > 1}">
                         <c:set var="replyAvatarName" value="${fn:substring(reply.ename, 1, fn:length(reply.ename))}" />
                     </c:if>
-                    <article class="reply-item d-flex gap-3 py-3 border-bottom">
-                        <div class="reply-avatar"><c:out value="${replyAvatarName}"/></div>
+                    <article class="reply-item d-flex gap-3 py-3 border-bottom" style="--reply-depth:${reply.depth}">
+                        <div class="reply-avatar"><c:out value="${reply.deleted ? '-' : replyAvatarName}"/></div>
 
                         <div class="flex-grow-1 min-w-0">
-                            <div class="d-flex align-items-baseline gap-2 mb-1">
-                                <strong class="small"><c:out value="${replyName}"/><c:if test="${not empty reply.deptname}"> (<c:out value="${reply.deptname}"/>)</c:if></strong>
-                                <span class="text-muted small"><c:out value="${reply.writedate}"/></span>
-                            </div>
+                            <c:if test="${not reply.deleted}">
+                                <div class="d-flex align-items-baseline gap-2 mb-1">
+                                    <strong class="small"><c:out value="${replyName}"/><c:if test="${not empty reply.deptname}"> (<c:out value="${reply.deptname}"/>)</c:if></strong>
+                                    <span class="text-muted small"><c:out value="${reply.writedate}"/></span>
+                                </div>
+                            </c:if>
 
                             <div class="reply-view">
-                                <p class="reply-content mb-2"><c:out value="${reply.content}"/></p>
+                                <p class="reply-content mb-2 ${reply.deleted ? 'reply-deleted-content' : ''}"><c:out value="${reply.deleted ? '삭제된 댓글입니다.' : reply.content}"/></p>
 
-                                <c:if test="${not empty loginEmpno and reply.empno == loginEmpno}">
+                                <c:if test="${not empty loginEmpno and not reply.deleted}">
                                     <div class="d-flex align-items-center gap-2">
-                                        <button type="button" class="btn btn-link btn-sm reply-action-btn reply-edit-open">
-                                            <i class="bi bi-pencil-square"></i>
-                                            수정
+                                        <button type="button" class="btn btn-link btn-sm reply-action-btn reply-child-open">
+                                            <i class="bi bi-reply"></i>
+                                            답글
                                         </button>
-                                        <form action="ReplyDelete.do" method="post" class="reply-delete-form m-0"
-                                            data-ajax-url="${pageContext.request.contextPath}/ReplyDeleteAjax">
-                                            <input type="hidden" name="no" value="${reply.no}">
-                                            <input type="hidden" name="idx_fk" value="${boardIdx}">
-                                            <button type="submit" class="btn btn-link btn-sm reply-action-btn reply-danger-btn">
-                                                <i class="bi bi-trash3"></i>
-                                                삭제
+                                        <c:if test="${reply.empno == loginEmpno}">
+                                            <button type="button" class="btn btn-link btn-sm reply-action-btn reply-edit-open">
+                                                <i class="bi bi-pencil-square"></i>
+                                                수정
                                             </button>
-                                        </form>
+                                            <form action="ReplyDelete.do" method="post" class="reply-delete-form m-0"
+                                                data-ajax-url="${pageContext.request.contextPath}/ReplyDeleteAjax">
+                                                <input type="hidden" name="no" value="${reply.no}">
+                                                <input type="hidden" name="idx_fk" value="${boardIdx}">
+                                                <button type="submit" class="btn btn-link btn-sm reply-action-btn reply-danger-btn">
+                                                    <i class="bi bi-trash3"></i>
+                                                    삭제
+                                                </button>
+                                            </form>
+                                        </c:if>
                                     </div>
                                 </c:if>
                             </div>
 
-                            <c:if test="${not empty loginEmpno and reply.empno == loginEmpno}">
+                            <c:if test="${not empty loginEmpno and not reply.deleted}">
+                                <form action="ReplyWrite.do" method="post" class="reply-child-form mt-2" hidden
+                                    data-ajax-url="${pageContext.request.contextPath}/ReplyWriteAjax">
+                                    <input type="hidden" name="idx_fk" value="${boardIdx}">
+                                    <input type="hidden" name="parentNo" value="${reply.no}">
+                                    <textarea name="content" rows="2" class="form-control reply-textarea" placeholder="답글을 입력하세요." required></textarea>
+                                    <div class="d-flex justify-content-end gap-2 mt-2">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm reply-child-cancel">취소</button>
+                                        <button type="submit" class="btn btn-primary btn-sm">등록</button>
+                                    </div>
+                                </form>
+                            </c:if>
+
+                            <c:if test="${not empty loginEmpno and not reply.deleted and reply.empno == loginEmpno}">
                                 <form action="ReplyUpdate.do" method="post" class="reply-edit-form" hidden
                                     data-ajax-url="${pageContext.request.contextPath}/ReplyUpdateAjax">
                                     <input type="hidden" name="no" value="${reply.no}">
