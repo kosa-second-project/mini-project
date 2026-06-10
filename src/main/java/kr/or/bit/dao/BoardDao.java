@@ -52,9 +52,15 @@ public class BoardDao {
             conn = ConnectionHelper.getConnection(DBType.ORACLE);
 
             String sql = "select * from "
-                       + "(select rownum rn, idx, empno, subject, content, writedate, readnum, "
+                       + "(select rownum rn, idx, empno, ename, deptname, subject, content, writedate, readnum, "
                        + "        refer, depth, step, deleted, lat, lng "
-                       + " from (select * from board where deleted = 0 order by idx desc) "
+                       + " from (select b.idx, b.empno, e.ename, d.deptname, b.subject, b.content, b.writedate, b.readnum, "
+                       + "              b.refer, b.depth, b.step, b.deleted, b.lat, b.lng "
+                       + "       from board b "
+                       + "       left join emp e on b.empno = e.empno "
+                       + "       left join dept d on e.deptno = d.deptno "
+                       + "       where b.deleted = 0 "
+                       + "       order by b.idx desc) "
                        + " where rownum <= ?"
                        + ") where rn >= ?";
 
@@ -92,10 +98,12 @@ public class BoardDao {
         try {
             conn = ConnectionHelper.getConnection(DBType.ORACLE);
 
-            String sql = "select idx, empno, subject, content, writedate, readnum, "
-                       + "       refer, depth, step, deleted, lat, lng "
-                       + "from board "
-                       + "where idx = ? and deleted = 0";
+            String sql = "select b.idx, b.empno, e.ename, d.deptname, b.subject, b.content, b.writedate, b.readnum, "
+                       + "       b.refer, b.depth, b.step, b.deleted, b.lat, b.lng "
+                       + "from board b "
+                       + "left join emp e on b.empno = e.empno "
+                       + "left join dept d on e.deptno = d.deptno "
+                       + "where b.idx = ? and b.deleted = 0";
 
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, idx);
@@ -240,6 +248,8 @@ public class BoardDao {
         return Board.builder()
                 .idx(rs.getInt("idx"))
                 .empno(rs.getInt("empno"))
+                .ename(rs.getString("ename"))
+                .deptname(rs.getString("deptname"))
                 .subject(rs.getString("subject"))
                 .content(rs.getString("content"))
                 .writedate(rs.getDate("writedate"))

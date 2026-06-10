@@ -67,7 +67,7 @@
                 <tr>
                     <th style="width: 90px;">&#48264;&#54840;</th>
                     <th>&#51228;&#47785;</th>
-                    <th style="width: 120px;">&#49324;&#48264;</th>
+                    <th style="width: 180px;">작성자 (부서)</th>
                     <th style="width: 160px;">&#51089;&#49457;&#51068;</th>
                     <th style="width: 100px;">&#51312;&#54924;&#49688;</th>
                 </tr>
@@ -84,7 +84,7 @@
                             <%= board.getSubject() %>
                         </a>
                     </td>
-                    <td><%= board.getEmpno() %></td>
+                    <td><%= (board.getEname() == null || board.getEname().isEmpty()) ? board.getEmpno() : board.getEname() %><% if (board.getDeptname() != null && !board.getDeptname().isEmpty()) { %> (<%= board.getDeptname() %>)<% } %></td>
                     <td><%= board.getWritedate() %></td>
                     <td><%= board.getReadnum() %></td>
                 </tr>
@@ -187,11 +187,16 @@
                 + escapeHtml(board.subject)
                 + '</a>'
                 + '</td>'
-                + '<td>' + escapeHtml(board.empno) + '</td>'
+                + '<td>' + escapeHtml(writerLabel(board)) + '</td>'
                 + '<td>' + escapeHtml(board.writedate) + '</td>'
                 + '<td>' + escapeHtml(board.readnum) + '</td>'
                 + '</tr>';
         }).join("");
+    }
+
+    function writerLabel(board) {
+        var name = board.ename || board.empno;
+        return board.deptname ? name + " (" + board.deptname + ")" : name;
     }
 
     function pageItem(label, cp, ps, disabled, active, ariaLabel) {

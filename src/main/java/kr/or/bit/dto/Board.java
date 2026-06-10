@@ -13,6 +13,8 @@ import lombok.AllArgsConstructor;
 public class Board {
     private int idx;
     private int empno;
+    private String ename;
+    private String deptname;
     private String subject;
     private String content;
     private Date writedate;

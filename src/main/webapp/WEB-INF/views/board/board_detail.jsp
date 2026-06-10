@@ -23,18 +23,12 @@
                 <h1><c:out value="${board.subject}" /></h1>
                 <div class="meta">
                     <span>글 번호 ${board.idx}</span>
-                    <span>사원번호 ${board.empno}</span>
+                    <span>작성자 <c:out value="${empty board.ename ? board.empno : board.ename}" /><c:if test="${not empty board.deptname}"> (<c:out value="${board.deptname}" />)</c:if></span>
                     <span>작성일 ${board.writedate}</span>
                     <span>조회수 ${board.readnum}</span>
                 </div>
-                <pre class="content"><c:out value="${board.content}" /></pre>
-
-                <c:if test="${not empty board.lat and not empty board.lng}">
-                    <section class="map-section" data-map-mode="detail" data-lat="${board.lat}" data-lng="${board.lng}">
-                        <h2>위치</h2>
-                        <div id="map" class="map-box"></div>
-                    </section>
-                </c:if>
+                <textarea id="boardContentSource" class="editor-source"><c:out value="${board.content}" /></textarea>
+                <div id="boardContent" class="content rich-content" data-editor-mode="detail"></div>
 
                 <div class="actions">
                     <a href="${pageContext.request.contextPath}/BoardEditForm.do?idx=${board.idx}">수정</a>
@@ -49,10 +43,10 @@
 </main>
 
 <jsp:include page="/include/quickMenu.jsp" />
-<c:if test="${not empty kakaoMapKey and not empty board.lat and not empty board.lng}">
+<c:if test="${not empty kakaoMapKey}">
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapKey}"></script>
-<script src="${pageContext.request.contextPath}/js/board-map.js?v=20260609-map-layout"></script>
 </c:if>
+<script src="${pageContext.request.contextPath}/js/board-editor.js?v=20260610-inline-map"></script>
 <script src="${pageContext.request.contextPath}/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -86,6 +86,8 @@ public class BoardListAjax implements Action {
                 json.append("{");
                 json.append("\"idx\":").append(board.getIdx()).append(",");
                 json.append("\"empno\":").append(board.getEmpno()).append(",");
+                json.append("\"ename\":\"").append(escapeJson(writerName(board))).append("\",");
+                json.append("\"deptname\":\"").append(escapeJson(board.getDeptname())).append("\",");
                 json.append("\"subject\":\"").append(escapeJson(board.getSubject())).append("\",");
                 json.append("\"writedate\":\"")
                         .append(board.getWritedate() == null ? "" : dateFormat.format(board.getWritedate()))
@@ -98,6 +100,13 @@ public class BoardListAjax implements Action {
         json.append("]");
         json.append("}");
         return json.toString();
+    }
+
+    private String writerName(Board board) {
+        if (board.getEname() != null && !board.getEname().trim().isEmpty()) {
+            return board.getEname();
+        }
+        return String.valueOf(board.getEmpno());
     }
 
     private String escapeJson(String value) {
