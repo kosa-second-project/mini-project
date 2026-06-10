@@ -76,6 +76,9 @@
                             <a href="BoardDetail.do?idx=<%= board.getIdx() %>" class="board-title-link">
                                 <%= board.getSubject() %>
                             </a>
+                            <% if (board.getReplyCount() > 0) { %>
+                                <span class="board-reply-count">[<%= board.getReplyCount() %>]</span>
+                            <% } %>
                         <% } %>
                     </td>
                     <td><% if (board.isDeleted()) { %>-<% } else { %><%= (board.getEname() == null || board.getEname().isEmpty()) ? board.getEmpno() : board.getEname() %><% if (board.getDeptname() != null && !board.getDeptname().isEmpty()) { %> (<%= board.getDeptname() %>)<% } %><% } %></td>

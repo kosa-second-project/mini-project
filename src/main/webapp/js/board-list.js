@@ -50,7 +50,8 @@
         return indent + marker
             + '<a href="BoardDetail.do?idx=' + encodeURIComponent(board.idx) + '" class="board-title-link">'
             + escapeHtml(board.subject)
-            + '</a>';
+            + '</a>'
+            + (Number(board.replyCount || 0) > 0 ? ' <span class="board-reply-count">[' + escapeHtml(board.replyCount) + ']</span>' : '');
     }
 
     function renderRows(boardList) {

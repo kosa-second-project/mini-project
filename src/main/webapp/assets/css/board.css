@@ -71,6 +71,13 @@
     font-style: italic;
 }
 
+.board-reply-count {
+    margin-left: 4px;
+    color: #66c7f3;
+    font-weight: 700;
+    font-size: 13px;
+}
+
 .board-pagination {
     margin-top: 24px;
 }

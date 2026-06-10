@@ -24,4 +24,5 @@ public class Board {
     private int depth;
     private int step;
     private boolean deleted;
+    private int replyCount;
 }

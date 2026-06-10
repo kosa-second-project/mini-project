@@ -59,7 +59,8 @@ public class BoardDao {
             conn = ConnectionHelper.getConnection(DBType.ORACLE);
 
             String sql = "select b.idx, b.empno, e.ename, d.deptname, b.subject, b.content, b.writedate, b.readnum, "
-                       + "       b.refer, b.depth, b.step, b.deleted "
+                       + "       b.refer, b.depth, b.step, b.deleted, "
+                       + "       (select count(*) from reply r where r.idx_fk = b.idx and r.deleted = 0) reply_count "
                        + "from board b "
                        + "left join emp e on b.empno = e.empno "
                        + "left join dept d on e.deptno = d.deptno "
@@ -120,7 +121,8 @@ public class BoardDao {
             conn = ConnectionHelper.getConnection(DBType.ORACLE);
 
             String sql = "select b.idx, b.empno, e.ename, d.deptname, b.subject, b.content, b.writedate, b.readnum, "
-                       + "       b.refer, b.depth, b.step, b.deleted "
+                       + "       b.refer, b.depth, b.step, b.deleted, "
+                       + "       (select count(*) from reply r where r.idx_fk = b.idx and r.deleted = 0) reply_count "
                        + "from board b "
                        + "left join emp e on b.empno = e.empno "
                        + "left join dept d on e.deptno = d.deptno "
@@ -365,6 +367,7 @@ public class BoardDao {
                 .depth(rs.getInt("depth"))
                 .step(rs.getInt("step"))
                 .deleted(rs.getInt("deleted") == 1)
+                .replyCount(rs.getInt("reply_count"))
                 .build();
     }
 }
