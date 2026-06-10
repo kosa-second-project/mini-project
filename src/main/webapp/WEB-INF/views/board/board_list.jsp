@@ -24,13 +24,17 @@
     if (endPage > pagecount) endPage = pagecount;
 %>
 
-<div class="container mt-5 board-list-page" data-context-path="${pageContext.request.contextPath}">
+<div class="container mt-5 board-list-page"
+     data-context-path="${pageContext.request.contextPath}"
+     data-login-url="${pageContext.request.contextPath}/Login.emp"
+     data-login-message="로그인한 사용자만 글을 작성할 수 있습니다."
+     data-logged-in="${boardWriteAllowed}">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
             <h2 class="mb-1">게시글 목록</h2>
             <span class="text-muted" id="boardListStatus">전체 <%= totalboardcount %>건 / 현재 <%= cpage %>페이지</span>
         </div>
-        <a href="BoardWriteForm.do" class="btn btn-primary">글쓰기</a>
+        <a href="BoardWriteForm.do" class="btn btn-primary board-write-link">글쓰기</a>
     </div>
 
     <div class="d-flex justify-content-end mb-3">

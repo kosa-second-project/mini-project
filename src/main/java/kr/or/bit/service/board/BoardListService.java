@@ -8,6 +8,7 @@ import kr.or.bit.action.Action;
 import kr.or.bit.action.ActionForward;
 import kr.or.bit.dao.BoardDao;
 import kr.or.bit.dto.Board;
+import kr.or.bit.utils.SessionUtil;
 
 public class BoardListService implements Action {
 
@@ -57,6 +58,7 @@ public class BoardListService implements Action {
             request.setAttribute("cpage", cpage);
             request.setAttribute("pagecount", pagecount);
             request.setAttribute("boardList", list);
+            request.setAttribute("boardWriteAllowed", SessionUtil.getLoginEmpno(request) != null);
 
             forward.setRedirect(false);
             forward.setPath("/WEB-INF/views/board/board_list.jsp");

@@ -10,6 +10,7 @@
     var pageSizeForm = document.getElementById("boardPageSizeForm");
     var tbody = document.getElementById("boardListBody");
     var pagination = document.querySelector(".board-pagination");
+    var writeLink = document.querySelector(".board-write-link");
 
     if (!pagination) {
         pagination = document.createElement("nav");
@@ -124,6 +125,17 @@
             pageSizeForm.submit();
         });
     });
+
+    if (writeLink) {
+        writeLink.addEventListener("click", function(event) {
+            if (page.dataset.loggedIn === "true") {
+                return;
+            }
+            event.preventDefault();
+            alert(page.dataset.loginMessage || "로그인한 사용자만 글을 작성할 수 있습니다.");
+            window.location.href = page.dataset.loginUrl || (contextPath + "/Login.emp");
+        });
+    }
 
     pagination.addEventListener("click", function(event) {
         var link = event.target.closest("a");
