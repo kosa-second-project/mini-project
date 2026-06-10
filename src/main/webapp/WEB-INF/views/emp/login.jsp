@@ -1,11 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/include/header.jsp" %>
-<body class="login-wrapper dark-theme">
+<body class="login-wrapper">
 
     <div class="login-card glass-card text-center" id="loginCard">
         <div class="mb-4">
             <div class="bg-primary bg-gradient text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 64px; height: 64px; box-shadow: 0 8px 20px var(--primary-glow);">
-                <i class="fa-solid fa-users-gear fa-xl"></i>
+                <i class="bi bi-people-fill fs-3"></i>
             </div>
             <h3 class="mt-3 fw-bold text-white">EMP Portal</h3>
             <p class="text-secondary small">사원번호와 비밀번호를 입력해주세요.</p>
@@ -13,21 +13,21 @@
 
         <!-- 에러 메시지 알림 -->
         <div id="alertBox" class="alert alert-danger d-none py-2 px-3 small border-0" role="alert" style="border-radius: 8px;">
-            <i class="fa-solid fa-circle-exclamation me-1"></i> <span id="errorMsg"></span>
+            <i class="bi bi-exclamation-circle me-1"></i> <span id="errorMsg"></span>
         </div>
 
         <form id="loginForm" novalidate>
             <div class="form-floating mb-3">
-                <input type="number" class="form-control" id="empno" name="empno" placeholder="1000" required>
-                <label for="empno" class="text-dark"><i class="fa-solid fa-id-card me-2"></i>사원 번호</label>
+                <input type="text" class="form-control" id="empno" name="empno" placeholder="1000" inputmode="numeric" pattern="[0-9]*" autocomplete="username" required>
+                <label for="empno" class="text-dark"><i class="bi bi-person-badge me-2"></i>사원 번호</label>
             </div>
             <div class="form-floating mb-4">
-                <input type="password" class="form-control" id="pwd" name="pwd" placeholder="Password" required>
-                <label for="pwd" class="text-dark"><i class="fa-solid fa-lock me-2"></i>비밀번호</label>
+                <input type="password" class="form-control" id="pwd" name="pwd" placeholder="Password" autocomplete="current-password" required>
+                <label for="pwd" class="text-dark"><i class="bi bi-lock me-2"></i>비밀번호</label>
             </div>
             <button type="submit" class="btn btn-primary w-100 d-flex align-items-center justify-content-center" id="btnSubmit">
                 <span class="spinner-border spinner-border-sm me-2 d-none" id="btnSpinner" role="status" aria-hidden="true"></span>
-                <i class="fa-solid fa-right-to-bracket me-2" id="btnIcon"></i>로그인
+                <i class="bi bi-box-arrow-in-right me-2" id="btnIcon"></i>로그인
             </button>
         </form>
 
@@ -37,7 +37,7 @@
     </div>
 
     <!-- Bootstrap Bundle JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="${pageContext.request.contextPath}/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script>
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();

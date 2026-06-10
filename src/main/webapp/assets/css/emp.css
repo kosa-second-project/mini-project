@@ -1,0 +1,67 @@
+.login-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+        radial-gradient(circle at 85% 12%, rgba(19, 135, 193, 0.2), transparent 28rem),
+        var(--background-color);
+    padding: 20px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    padding: 40px 30px;
+}
+
+.btn-actions {
+    padding: 6px 12px;
+    font-size: 0.875rem;
+}
+
+.custom-table {
+    margin-bottom: 0;
+}
+
+.custom-table th {
+    padding: 16px 20px;
+    text-transform: uppercase;
+}
+
+.custom-table td {
+    padding: 16px 20px;
+    vertical-align: middle;
+}
+
+.clickable-row {
+    cursor: pointer;
+}
+
+.badge-admin,
+.badge-user {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.toast-container {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 1060;
+}
+
+.custom-toast {
+    border-left: 5px solid var(--accent-color);
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-6px); }
+    20%, 40%, 60%, 80% { transform: translateX(6px); }
+}
+
+.shake {
+    animation: shake 0.5s ease-in-out;
+}

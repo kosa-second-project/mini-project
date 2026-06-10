@@ -16,7 +16,8 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <!-- Context Path 및 캐시 방지 적용한 외부 스타일시트 링크 -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/subway.css?v=<%=System.currentTimeMillis()%>">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/folioone-theme.css?v=<%=System.currentTimeMillis()%>">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/subway.css?v=<%=System.currentTimeMillis()%>">
 </head>
 <body>
 

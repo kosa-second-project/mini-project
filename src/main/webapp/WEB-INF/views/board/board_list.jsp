@@ -6,16 +6,18 @@
 <head>
 <meta charset="UTF-8">
 <title>&#44172;&#49884;&#44544; &#47785;&#47197;</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="${pageContext.request.contextPath}/style/board.css" rel="stylesheet">
+<link href="${pageContext.request.contextPath}/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="${pageContext.request.contextPath}/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+<link href="${pageContext.request.contextPath}/assets/css/folioone-theme.css" rel="stylesheet">
+<link href="${pageContext.request.contextPath}/assets/css/board.css" rel="stylesheet">
 </head>
-<body>
+<body class="app-shell">
 <%
     List<Board> boardList = (List<Board>) request.getAttribute("boardList");
     Integer totalboardcount = (Integer) request.getAttribute("totalboardcount");
     Integer cpage = (Integer) request.getAttribute("cpage");
     Integer pagesize = (Integer) request.getAttribute("pagesize");
-    String pager = (String) request.getAttribute("pager");
+    Integer pagecount = (Integer) request.getAttribute("pagecount");
 
     if (totalboardcount == null) {
         totalboardcount = 0;
@@ -26,9 +28,19 @@
     if (pagesize == null) {
         pagesize = 5;
     }
+    if (pagecount == null) {
+        pagecount = 0;
+    }
+
+    int pagerSize = 5;
+    int startPage = ((cpage - 1) / pagerSize) * pagerSize + 1;
+    int endPage = startPage + pagerSize - 1;
+    if (endPage > pagecount) {
+        endPage = pagecount;
+    }
 %>
 
-<div class="container mt-5">
+<div class="container mt-5 board-list-page">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
             <h2 class="mb-1">&#44172;&#49884;&#44544; &#47785;&#47197;</h2>
@@ -68,7 +80,7 @@
                 <tr>
                     <td><%= board.getIdx() %></td>
                     <td class="text-start">
-                        <a href="BoardDetail.do?idx=<%= board.getIdx() %>" class="link-dark text-decoration-none">
+                        <a href="BoardDetail.do?idx=<%= board.getIdx() %>" class="board-title-link">
                             <%= board.getSubject() %>
                         </a>
                     </td>
@@ -90,12 +102,42 @@
         </table>
     </div>
 
-    <div class="text-center mt-4">
-        <%= pager == null ? "" : pager %>
-    </div>
+    <% if (pagecount > 0) { %>
+        <nav class="board-pagination" aria-label="게시글 페이지">
+            <ul class="pagination justify-content-center">
+                <li class="page-item <%= cpage == 1 ? "disabled" : "" %>">
+                    <a class="page-link" href="BoardList.do?cp=1&ps=<%= pagesize %>" aria-label="처음">
+                        <i class="bi bi-chevron-double-left"></i>
+                    </a>
+                </li>
+                <li class="page-item <%= cpage == 1 ? "disabled" : "" %>">
+                    <a class="page-link" href="BoardList.do?cp=<%= cpage - 1 %>&ps=<%= pagesize %>" aria-label="이전">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+
+                <% for (int i = startPage; i <= endPage; i++) { %>
+                    <li class="page-item <%= i == cpage ? "active" : "" %>">
+                        <a class="page-link" href="BoardList.do?cp=<%= i %>&ps=<%= pagesize %>"><%= i %></a>
+                    </li>
+                <% } %>
+
+                <li class="page-item <%= cpage == pagecount ? "disabled" : "" %>">
+                    <a class="page-link" href="BoardList.do?cp=<%= cpage + 1 %>&ps=<%= pagesize %>" aria-label="다음">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+                <li class="page-item <%= cpage == pagecount ? "disabled" : "" %>">
+                    <a class="page-link" href="BoardList.do?cp=<%= pagecount %>&ps=<%= pagesize %>" aria-label="마지막">
+                        <i class="bi bi-chevron-double-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    <% } %>
 </div>
 
 <jsp:include page="/include/quickMenu.jsp" />
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="${pageContext.request.contextPath}/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

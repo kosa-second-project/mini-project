@@ -1,13 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ include file="/include/header.jsp" %>
-<body class="bg-light">
+<body class="app-shell">
 
     <!-- 상단 프로필 바 -->
     <nav class="navbar navbar-expand-lg profile-bar py-3 shadow-sm mb-4">
         <div class="container">
             <a class="navbar-brand fw-bold d-flex align-items-center text-primary" href="#">
-                <i class="fa-solid fa-users-gear me-2"></i> EMP Portal
+                <i class="bi bi-people-fill me-2"></i> EMP Portal
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
                 <span class="navbar-toggler-icon"></span>
@@ -21,11 +21,11 @@
                     </div>
                     <span class="badge ${sessionScope.loginUser.role eq 'ADMIN' ? 'badge-admin' : 'badge-user'}">
                         <c:choose>
-                            <c:when test="${sessionScope.loginUser.role eq 'ADMIN'}"><i class="fa-solid fa-crown me-1"></i>대표</c:when>
-                            <c:otherwise><i class="fa-solid fa-user me-1"></i>사원</c:otherwise>
+                            <c:when test="${sessionScope.loginUser.role eq 'ADMIN'}"><i class="bi bi-award me-1"></i>대표</c:when>
+                            <c:otherwise><i class="bi bi-person me-1"></i>사원</c:otherwise>
                         </c:choose>
                     </span>
-                    <a href="Logout.emp" class="btn btn-outline-danger btn-actions"><i class="fa-solid fa-right-from-bracket me-1"></i>로그아웃</a>
+                    <a href="Logout.emp" class="btn btn-outline-danger btn-actions"><i class="bi bi-box-arrow-right me-1"></i>로그아웃</a>
                 </div>
             </div>
         </div>
@@ -38,10 +38,10 @@
                 <h4 class="fw-bold text-dark m-0">
                     <c:choose>
                         <c:when test="${sessionScope.loginUser.role eq 'ADMIN'}">
-                            <i class="fa-solid fa-list-check me-2 text-primary"></i>전체 사원 관리 명부
+                            <i class="bi bi-list-check me-2 text-primary"></i>전체 사원 관리 명부
                         </c:when>
                         <c:otherwise>
-                            <i class="fa-solid fa-users me-2 text-primary"></i>소속 부서 팀원 명부
+                            <i class="bi bi-people me-2 text-primary"></i>소속 부서 팀원 명부
                         </c:otherwise>
                     </c:choose>
                 </h4>
@@ -51,7 +51,7 @@
             <c:if test="${sessionScope.loginUser.role eq 'ADMIN'}">
                 <div class="col-auto">
                     <button class="btn btn-primary d-flex align-items-center" onclick="openInsertModal()">
-                        <i class="fa-solid fa-user-plus me-2"></i> 사원 추가
+                        <i class="bi bi-person-plus me-2"></i> 사원 추가
                     </button>
                 </div>
             </c:if>
@@ -73,7 +73,7 @@
         </div>
 
         <!-- 사원 목록 테이블 -->
-        <div class="custom-table-container shadow-sm bg-white">
+        <div class="custom-table-container">
             <div class="table-responsive">
                 <table class="table table-hover custom-table align-middle">
                     <thead>
@@ -111,7 +111,7 @@
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
                     <div class="modal-header bg-light">
-                        <h5 class="modal-title fw-bold"><i class="fa-solid fa-user-plus text-primary me-2"></i>신규 사원 등록</h5>
+                        <h5 class="modal-title fw-bold"><i class="bi bi-person-plus text-primary me-2"></i>신규 사원 등록</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form id="insertForm" novalidate>
@@ -166,7 +166,7 @@
                         </div>
                         <div class="modal-footer bg-light border-top">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check me-1"></i>등록 완료</button>
+                            <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>등록 완료</button>
                         </div>
                     </form>
                 </div>
@@ -179,7 +179,7 @@
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header bg-light">
-                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-address-card text-primary me-2"></i>사원 상세 정보</h5>
+                    <h5 class="modal-title fw-bold"><i class="bi bi-person-vcard text-primary me-2"></i>사원 상세 정보</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form id="detailForm" novalidate>
@@ -187,7 +187,7 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label small fw-bold">사원번호</label>
-                                <input type="number" class="form-control" id="detailEmpno" name="empno" readonly style="background-color: #e9ecef;">
+                                <input type="number" class="form-control" id="detailEmpno" name="empno" readonly>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label small fw-bold">사원이름</label>
@@ -239,14 +239,14 @@
                         <div>
                             <!-- 대표만 삭제 가능 -->
                             <c:if test="${sessionScope.loginUser.role eq 'ADMIN'}">
-                                <button type="button" class="btn btn-danger" onclick="deleteEmp()"><i class="fa-solid fa-trash-can me-1"></i>사원 삭제</button>
+                                <button type="button" class="btn btn-danger" onclick="deleteEmp()"><i class="bi bi-trash3 me-1"></i>사원 삭제</button>
                             </c:if>
                         </div>
                         <div class="d-flex gap-2">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
                             <!-- 대표만 수정 저장 가능 -->
                             <c:if test="${sessionScope.loginUser.role eq 'ADMIN'}">
-                                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk me-1"></i>정보 수정</button>
+                                <button type="submit" class="btn btn-primary"><i class="bi bi-floppy me-1"></i>정보 수정</button>
                             </c:if>
                         </div>
                     </div>
@@ -259,7 +259,7 @@
     <div class="toast-container">
         <div id="liveToast" class="toast custom-toast hide" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header border-0 bg-transparent text-primary">
-                <i class="fa-solid fa-circle-check me-2 fa-lg text-success"></i>
+                <i class="bi bi-check-circle me-2 fs-5 text-success"></i>
                 <strong class="me-auto text-dark">시스템 알림</strong>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
@@ -269,8 +269,10 @@
         </div>
     </div>
 
+    <jsp:include page="/include/quickMenu.jsp" />
+
     <!-- Bootstrap Bundle JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="${pageContext.request.contextPath}/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script>
         // 세션 정보 자바스크립트 캐싱
         const currentUserRole = '${sessionScope.loginUser.role}';
@@ -379,7 +381,7 @@
                 .catch(err => {
                     console.error('Error loading list:', err);
                     document.getElementById('empTableBody').innerHTML = 
-                        '<tr><td colspan="8" class="text-center text-danger py-4"><i class="fa-solid fa-circle-exclamation me-1"></i> 데이터를 불러오지 못했습니다.</td></tr>';
+                        '<tr><td colspan="8" class="text-center text-danger py-4"><i class="bi bi-exclamation-circle me-1"></i> 데이터를 불러오지 못했습니다.</td></tr>';
                 });
         }
 
@@ -397,13 +399,13 @@
             // 처음 페이지 (<<)
             const firstLi = document.createElement('li');
             firstLi.className = `page-item \${cpage === 1 ? 'disabled' : ''}`;
-            firstLi.innerHTML = `<a class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center" href="#" onclick="changePage(1); return false;" style="width: 32px; height: 32px;"><i class="fa-solid fa-angles-left small"></i></a>`;
+            firstLi.innerHTML = `<a class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center" href="#" onclick="changePage(1); return false;" style="width: 32px; height: 32px;"><i class="bi bi-chevron-double-left small"></i></a>`;
             ul.appendChild(firstLi);
 
             // 이전 페이지 (<)
             const prevLi = document.createElement('li');
             prevLi.className = `page-item \${cpage === 1 ? 'disabled' : ''}`;
-            prevLi.innerHTML = `<a class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center" href="#" onclick="changePage(\${cpage - 1}); return false;" style="width: 32px; height: 32px;"><i class="fa-solid fa-angle-left small"></i></a>`;
+            prevLi.innerHTML = `<a class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center" href="#" onclick="changePage(\${cpage - 1}); return false;" style="width: 32px; height: 32px;"><i class="bi bi-chevron-left small"></i></a>`;
             ul.appendChild(prevLi);
 
             // 페이지 번호들 (최대 5개 노출)
@@ -421,13 +423,13 @@
             // 다음 페이지 (>)
             const nextLi = document.createElement('li');
             nextLi.className = `page-item \${cpage === pagecount ? 'disabled' : ''}`;
-            nextLi.innerHTML = `<a class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center" href="#" onclick="changePage(\${cpage + 1}); return false;" style="width: 32px; height: 32px;"><i class="fa-solid fa-angle-right small"></i></a>`;
+            nextLi.innerHTML = `<a class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center" href="#" onclick="changePage(\${cpage + 1}); return false;" style="width: 32px; height: 32px;"><i class="bi bi-chevron-right small"></i></a>`;
             ul.appendChild(nextLi);
 
             // 끝 페이지 (>>)
             const lastLi = document.createElement('li');
             lastLi.className = `page-item \${cpage === pagecount ? 'disabled' : ''}`;
-            lastLi.innerHTML = `<a class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center" href="#" onclick="changePage(\${pagecount}); return false;" style="width: 32px; height: 32px;"><i class="fa-solid fa-angles-right small"></i></a>`;
+            lastLi.innerHTML = `<a class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center" href="#" onclick="changePage(\${pagecount}); return false;" style="width: 32px; height: 32px;"><i class="bi bi-chevron-double-right small"></i></a>`;
             ul.appendChild(lastLi);
 
             container.appendChild(ul);

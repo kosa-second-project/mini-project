@@ -4,10 +4,14 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>게시글 삭제</title>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/style/board.css?v=20260609-map-layout">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/vendor/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/vendor/bootstrap-icons/bootstrap-icons.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/folioone-theme.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/board.css?v=20260609-map-layout">
 </head>
-<body>
+<body class="app-shell">
 <main class="board-page narrow">
     <h1>게시글 삭제</h1>
     <c:if test="${not empty message}">

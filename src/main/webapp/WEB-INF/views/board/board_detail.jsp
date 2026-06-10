@@ -5,10 +5,13 @@
 <head>
 <meta charset="UTF-8">
 <title>게시글 상세</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/style/board.css?v=20260609-map-layout">
+<link href="${pageContext.request.contextPath}/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="${pageContext.request.contextPath}/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+<link href="${pageContext.request.contextPath}/assets/css/folioone-theme.css" rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/board.css?v=20260609-map-layout">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reply.css">
 </head>
-<body>
+<body class="app-shell">
 <main class="board-page">
     <c:choose>
         <c:when test="${empty board}">
@@ -50,6 +53,6 @@
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapKey}"></script>
 <script src="${pageContext.request.contextPath}/js/board-map.js?v=20260609-map-layout"></script>
 </c:if>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="${pageContext.request.contextPath}/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
