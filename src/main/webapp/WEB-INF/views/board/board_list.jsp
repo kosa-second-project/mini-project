@@ -6,6 +6,7 @@
     <jsp:param name="pageCss" value="/assets/css/board.css" />
 </jsp:include>
 <body class="app-shell">
+<jsp:include page="/include/appHeader.jsp" />
 <%
     List<Board> boardList = (List<Board>) request.getAttribute("boardList");
     Integer totalboardcount = (Integer) request.getAttribute("totalboardcount");

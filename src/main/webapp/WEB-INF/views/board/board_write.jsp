@@ -5,6 +5,7 @@
     <jsp:param name="pageCss" value="/assets/css/board.css" />
 </jsp:include>
 <body class="app-shell">
+<jsp:include page="/include/appHeader.jsp" />
 <c:if test="${loginRequired}">
     <input type="checkbox" id="loginModalToggle" class="modal-toggle" checked>
     <div class="modal-backdrop">
@@ -39,5 +40,6 @@
 
 <jsp:include page="/include/quickMenu.jsp" />
 <script src="${pageContext.request.contextPath}/js/board-editor.js?v=<%=System.currentTimeMillis()%>"></script>
+<script src="${pageContext.request.contextPath}/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

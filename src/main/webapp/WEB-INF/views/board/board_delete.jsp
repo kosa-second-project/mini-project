@@ -5,6 +5,7 @@
     <jsp:param name="pageCss" value="/assets/css/board.css" />
 </jsp:include>
 <body class="app-shell">
+<jsp:include page="/include/appHeader.jsp" />
 <main class="board-page narrow">
     <h1>게시글 삭제</h1>
     <c:if test="${not empty message}">
@@ -29,5 +30,6 @@
     </c:choose>
 </main>
 <jsp:include page="/include/quickMenu.jsp" />
+<script src="${pageContext.request.contextPath}/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

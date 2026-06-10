@@ -6,6 +6,7 @@
     <jsp:param name="pageCss2" value="/assets/css/reply.css" />
 </jsp:include>
 <body class="app-shell">
+<jsp:include page="/include/appHeader.jsp" />
 <main class="board-page">
     <c:choose>
         <c:when test="${empty board}">
