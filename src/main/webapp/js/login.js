@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
             params.append('empno', empno);
             params.append('pwd', pwd);
 
-            fetch('LoginOk.ajax', {
+            fetch('LoginOkAjax', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'

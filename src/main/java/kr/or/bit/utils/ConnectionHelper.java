@@ -1,6 +1,5 @@
 package kr.or.bit.utils;
 //DB연결 작업 편하게
-
 //함수 > 편하게 > 많이 사용 > new (x) > static method (오버로딩)
 //확장성 : Oracle, Mysql .... 사용 (코드성) > enum
 
@@ -17,69 +16,71 @@ import java.sql.Statement;
 public class ConnectionHelper {
 
 	public static Connection getConnection(DBType dbType) {
-
+		
 		Connection conn = null;
-
+	
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			switch (dbType) {
-				case ORACLE:
-					conn = DriverManager.getConnection("jdbc:oracle:thin:@192.168.2.43:1521/XEPDB1", "KOSA", "0000");
-					break;
-				case MARIADB:
-					conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/sampledb", "KOSA", "1004");
-					break;
-			}
+			    Class.forName("oracle.jdbc.driver.OracleDriver");
+				switch (dbType) {
+					case ORACLE: 
+					        conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/XEPDB1","KOSA","1004");
+							break;
+					case MARIADB: 
+					        conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/sampledb","KOSA","1004");
+							break;			
+				}
 		} catch (Exception e) {
-			System.out.println("connection Factory : " + e.getMessage());
+			 System.out.println("connection Factory : " + e.getMessage());
 		}
-
+		
+		
 		return conn;
 	}
-
-	public static Connection getConnection(DBType dbType, String id, String pwd) {
-
+	
+	public static Connection getConnection(DBType dbType, String id , String pwd) {
+		
 		Connection conn = null;
-
+		
 		try {
-			switch (dbType) {
-				case ORACLE:
-					conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/XEPDB1", id, pwd);
-					break;
-				case MARIADB:
-					conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/sampledb", id, pwd);
-					break;
-			}
+				switch (dbType) {
+					case ORACLE: 
+					        conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/XEPDB1",id,pwd);
+							break;
+					case MARIADB: 
+					        conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/sampledb",id,pwd);
+							break;			
+				}
 		} catch (Exception e) {
-			System.out.println("connection Factory : " + e.getMessage());
+			 System.out.println("connection Factory : " + e.getMessage());
 		}
-
+		
+		
 		return conn;
 	}
-
-	// 자원해제
+	
+	//자원해제
 	public static void close(Connection conn) {
-		if (conn != null) {
+		if(conn != null) {
 			try {
-				conn.close();
+				  conn.close();
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
 		}
 	}
-
+	
 	public static void close(ResultSet rs) {
-		if (rs != null) {
+		if(rs != null) {
 			try {
-				rs.close();
+				  rs.close();
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
 		}
 	}
-
+	
 	public static void close(Statement stmt) {
-		if (stmt != null) {
+		if(stmt != null) {
 			try {
 				stmt.close();
 			} catch (Exception e) {
@@ -87,9 +88,9 @@ public class ConnectionHelper {
 			}
 		}
 	}
-
+	
 	public static void close(PreparedStatement pstmt) {
-		if (pstmt != null) {
+		if(pstmt != null) {
 			try {
 				pstmt.close();
 			} catch (Exception e) {
