@@ -188,8 +188,6 @@
         var searchBtn = document.getElementById("placeSearchBtn");
         var listEl = document.getElementById("placesList");
         var mapEl = document.getElementById("map");
-        var latInput = document.getElementById("lat");
-        var lngInput = document.getElementById("lng");
         var savedRange = null;
         var map;
         var marker;
@@ -268,15 +266,8 @@
         }
 
         function syncContent() {
-            var firstMap;
             ensureTrailingParagraph(editor);
             source.value = serializeEditorContent(editor);
-
-            if (latInput && lngInput) {
-                firstMap = editor.querySelector("." + MAP_BLOCK_CLASS);
-                latInput.value = firstMap ? firstMap.dataset.lat : "";
-                lngInput.value = firstMap ? firstMap.dataset.lng : "";
-            }
         }
 
         function insertMapBlock(place) {

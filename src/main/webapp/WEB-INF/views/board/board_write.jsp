@@ -40,8 +40,6 @@
                 <ul id="placesList" class="place-results"></ul>
                 <div id="map" class="map-box"></div>
             </div>
-            <input type="hidden" name="lat" id="lat">
-            <input type="hidden" name="lng" id="lng">
         </section>
 
         <div class="actions">
