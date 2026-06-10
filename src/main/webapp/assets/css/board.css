@@ -133,8 +133,59 @@
 }
 
 .board-form textarea,
-.content {
+.content,
+.content-editor {
     line-height: 1.6;
+}
+
+.board-editor {
+    display: grid;
+    gap: 10px;
+}
+
+.editor-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.editor-label {
+    font-weight: 700;
+}
+
+.editor-source {
+    display: none;
+}
+
+.content-editor {
+    min-height: 320px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 14px;
+    color: var(--default-color);
+    background: rgba(255, 255, 255, 0.04);
+    outline: none;
+    word-break: break-word;
+}
+
+.content-editor:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 0.25rem var(--accent-glow);
+}
+
+.content-editor:empty::before {
+    content: attr(data-placeholder);
+    color: var(--muted-color);
+}
+
+.content-editor p,
+.rich-content p {
+    margin: 0 0 12px;
+}
+
+.rich-content {
+    white-space: normal;
 }
 
 .inline {
@@ -171,6 +222,10 @@
     border: 1px solid var(--border-color);
     border-radius: 8px;
     background: rgba(255, 255, 255, 0.03);
+}
+
+#mapPanel.editor-map-panel {
+    margin-top: 0;
 }
 
 .map-box {
@@ -238,6 +293,53 @@
 .place-result-item span {
     color: var(--muted-color);
     font-size: 13px;
+}
+
+.place-result-message {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--muted-color);
+    padding: 10px;
+}
+
+.content-map {
+    display: grid;
+    gap: 10px;
+    margin: 16px 0;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.content-map-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.content-map-remove {
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--default-color);
+    padding: 5px 10px;
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.content-map-canvas {
+    width: 100%;
+    min-height: 320px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.rich-content .content-map-remove {
+    display: none;
 }
 
 .map-info-window {
