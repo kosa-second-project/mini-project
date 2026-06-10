@@ -33,6 +33,10 @@
     white-space: nowrap;
 }
 
+.reply-item {
+    margin-left: calc(var(--reply-depth, 0) * 28px);
+}
+
 .reply-section .min-w-0 {
     min-width: 0;
 }
@@ -47,6 +51,11 @@
     line-height: 1.6;
     white-space: pre-wrap;
     word-break: break-word;
+}
+
+.reply-deleted-content {
+    color: var(--muted-color);
+    font-style: italic;
 }
 
 .reply-action-btn {

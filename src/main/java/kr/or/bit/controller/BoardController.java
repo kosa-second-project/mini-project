@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.or.bit.action.Action;
 import kr.or.bit.action.ActionForward;
+import kr.or.bit.dao.BoardDao;
+import kr.or.bit.dto.Board;
 import kr.or.bit.service.board.BoardDeleteFormService;
 import kr.or.bit.service.board.BoardDeleteService;
 import kr.or.bit.service.board.BoardDetailService;
@@ -46,6 +48,15 @@ public class BoardController extends HttpServlet {
             }
             request.setAttribute("loginRequired", false);
             BoardFormUtil.setKakaoMapKey(request);
+            String parentIdx = request.getParameter("parentIdx");
+            if (parentIdx != null && !parentIdx.trim().isEmpty()) {
+                Board parentBoard = BoardDao.getInstance().getContent(Integer.parseInt(parentIdx));
+                if (parentBoard == null) {
+                    response.sendRedirect(request.getContextPath() + "/BoardList.do");
+                    return;
+                }
+                request.setAttribute("parentBoard", parentBoard);
+            }
             forward = new ActionForward();
             forward.setRedirect(false);
             forward.setPath("/WEB-INF/views/board/board_write.jsp");

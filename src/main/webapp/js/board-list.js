@@ -33,8 +33,24 @@
     }
 
     function writerLabel(board) {
+        if (board.deleted) {
+            return "-";
+        }
         var name = board.ename || board.empno;
         return board.deptname ? name + " (" + board.deptname + ")" : name;
+    }
+
+    function subjectCell(board) {
+        var depth = Number(board.depth || 0);
+        var indent = '<span class="board-reply-indent" style="--reply-depth:' + depth + '"></span>';
+        var marker = depth > 0 ? '<span class="board-reply-marker">↳</span>' : "";
+        if (board.deleted) {
+            return indent + marker + '<span class="board-deleted-title">삭제된 게시판입니다.</span>';
+        }
+        return indent + marker
+            + '<a href="BoardDetail.do?idx=' + encodeURIComponent(board.idx) + '" class="board-title-link">'
+            + escapeHtml(board.subject)
+            + '</a>';
     }
 
     function renderRows(boardList) {
@@ -47,9 +63,7 @@
             return '<tr>'
                 + '<td>' + escapeHtml(board.idx) + '</td>'
                 + '<td class="text-start">'
-                + '<a href="BoardDetail.do?idx=' + encodeURIComponent(board.idx) + '" class="board-title-link">'
-                + escapeHtml(board.subject)
-                + '</a>'
+                + subjectCell(board)
                 + '</td>'
                 + '<td>' + escapeHtml(writerLabel(board)) + '</td>'
                 + '<td>' + escapeHtml(board.writedate) + '</td>'

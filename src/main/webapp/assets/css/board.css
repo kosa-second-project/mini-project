@@ -55,6 +55,22 @@
     color: #66c7f3;
 }
 
+.board-reply-indent {
+    display: inline-block;
+    width: calc(var(--reply-depth, 0) * 18px);
+}
+
+.board-reply-marker {
+    display: inline-block;
+    margin-right: 6px;
+    color: var(--muted-color);
+}
+
+.board-deleted-title {
+    color: var(--muted-color);
+    font-style: italic;
+}
+
 .board-pagination {
     margin-top: 24px;
 }

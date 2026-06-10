@@ -3,6 +3,7 @@ package kr.or.bit.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +28,8 @@ public class ReplyDao {
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-        List<Reply> list = null;
+        List<Reply> list = new ArrayList<>();
+        List<Reply> visibleList = new ArrayList<>();
 
         try {
             conn = ConnectionHelper.getConnection(DBType.ORACLE);
@@ -37,15 +39,13 @@ public class ReplyDao {
                        + "from reply r "
                        + "left join emp e on r.empno = e.empno "
                        + "left join dept d on e.deptno = d.deptno "
-                       + "where r.idx_fk = ? and r.deleted = 0 "
-                       + "order by r.no desc";
+                       + "where r.idx_fk = ? "
+                       + "order by case when r.refer = 0 then r.no else r.refer end desc, r.step asc, r.no desc";
 
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, idx_fk);
 
             rs = pstmt.executeQuery();
-
-            list = new ArrayList<>();
 
             while (rs.next()) {
                 Reply reply = Reply.builder()
@@ -65,6 +65,13 @@ public class ReplyDao {
                 list.add(reply);
             }
 
+            for (int i = 0; i < list.size(); i++) {
+                Reply reply = list.get(i);
+                if (!reply.isDeleted() || hasVisibleDescendant(list, i)) {
+                    visibleList.add(reply);
+                }
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -73,7 +80,27 @@ public class ReplyDao {
             ConnectionHelper.close(conn);
         }
 
-        return list;
+        return visibleList;
+    }
+
+    private boolean hasVisibleDescendant(List<Reply> list, int index) {
+        Reply reply = list.get(index);
+        int threadRefer = threadRefer(reply);
+
+        for (int i = index + 1; i < list.size(); i++) {
+            Reply candidate = list.get(i);
+            if (threadRefer(candidate) != threadRefer || candidate.getDepth() <= reply.getDepth()) {
+                break;
+            }
+            if (!candidate.isDeleted()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private int threadRefer(Reply reply) {
+        return reply.getRefer() == 0 ? reply.getNo() : reply.getRefer();
     }
 
     public int write(Reply reply) {
@@ -83,18 +110,18 @@ public class ReplyDao {
 
         try {
             conn = ConnectionHelper.getConnection(DBType.ORACLE);
+            int no = nextReplyNo(conn);
 
             String sql = "insert into reply(no, empno, content, writedate, idx_fk, "
                        + "                  refer, depth, step, deleted) "
-                       + "values(reply_seq.nextval, ?, ?, sysdate, ?, ?, ?, ?, 0)";
+                       + "values(?, ?, ?, sysdate, ?, ?, 0, 0, 0)";
 
             pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, reply.getEmpno());
-            pstmt.setString(2, reply.getContent());
-            pstmt.setInt(3, reply.getIdx_fk());
-            pstmt.setInt(4, reply.getRefer());
-            pstmt.setInt(5, reply.getDepth());
-            pstmt.setInt(6, reply.getStep());
+            pstmt.setInt(1, no);
+            pstmt.setInt(2, reply.getEmpno());
+            pstmt.setString(3, reply.getContent());
+            pstmt.setInt(4, reply.getIdx_fk());
+            pstmt.setInt(5, no);
 
             row = pstmt.executeUpdate();
 
@@ -106,6 +133,99 @@ public class ReplyDao {
         }
 
         return row;
+    }
+
+    public int writeReply(int parentNo, Reply reply) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        int row = 0;
+
+        try {
+            conn = ConnectionHelper.getConnection(DBType.ORACLE);
+            conn.setAutoCommit(false);
+
+            String parentSql = "select no, idx_fk, refer, depth, step from reply where no = ? and idx_fk = ? and deleted = 0";
+            pstmt = conn.prepareStatement(parentSql);
+            pstmt.setInt(1, parentNo);
+            pstmt.setInt(2, reply.getIdx_fk());
+            rs = pstmt.executeQuery();
+
+            if (!rs.next()) {
+                conn.rollback();
+                return 0;
+            }
+
+            int parentRefer = rs.getInt("refer");
+            int parentDepth = rs.getInt("depth");
+            int parentStep = rs.getInt("step");
+            int refer = parentRefer == 0 ? parentNo : parentRefer;
+            ConnectionHelper.close(rs);
+            ConnectionHelper.close(pstmt);
+
+            String shiftSql = "update reply set step = step + 1 where idx_fk = ? and (case when refer = 0 then no else refer end) = ? and step > ?";
+            pstmt = conn.prepareStatement(shiftSql);
+            pstmt.setInt(1, reply.getIdx_fk());
+            pstmt.setInt(2, refer);
+            pstmt.setInt(3, parentStep);
+            pstmt.executeUpdate();
+            ConnectionHelper.close(pstmt);
+
+            int no = nextReplyNo(conn);
+            String insertSql = "insert into reply(no, empno, content, writedate, idx_fk, "
+                             + "                  refer, depth, step, deleted) "
+                             + "values(?, ?, ?, sysdate, ?, ?, ?, ?, 0)";
+            pstmt = conn.prepareStatement(insertSql);
+            pstmt.setInt(1, no);
+            pstmt.setInt(2, reply.getEmpno());
+            pstmt.setString(3, reply.getContent());
+            pstmt.setInt(4, reply.getIdx_fk());
+            pstmt.setInt(5, refer);
+            pstmt.setInt(6, parentDepth + 1);
+            pstmt.setInt(7, parentStep + 1);
+
+            row = pstmt.executeUpdate();
+            conn.commit();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                if (conn != null) {
+                    conn.rollback();
+                }
+            } catch (SQLException rollbackException) {
+                rollbackException.printStackTrace();
+            }
+        } finally {
+            ConnectionHelper.close(rs);
+            ConnectionHelper.close(pstmt);
+            try {
+                if (conn != null) {
+                    conn.setAutoCommit(true);
+                }
+            } catch (SQLException autoCommitException) {
+                autoCommitException.printStackTrace();
+            }
+            ConnectionHelper.close(conn);
+        }
+
+        return row;
+    }
+
+    private int nextReplyNo(Connection conn) throws SQLException {
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            pstmt = conn.prepareStatement("select reply_seq.nextval from dual");
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            throw new SQLException("reply_seq.nextval failed");
+        } finally {
+            ConnectionHelper.close(rs);
+            ConnectionHelper.close(pstmt);
+        }
     }
 
     public int update(Reply reply) {

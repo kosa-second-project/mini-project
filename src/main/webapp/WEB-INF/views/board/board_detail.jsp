@@ -25,6 +25,9 @@
                 <div id="boardContent" class="content rich-content" data-editor-mode="detail"></div>
 
                 <div class="actions">
+                    <c:if test="${not empty sessionScope.loginUser and not board.deleted}">
+                        <a href="${pageContext.request.contextPath}/BoardWriteForm.do?parentIdx=${board.idx}">답글</a>
+                    </c:if>
                     <c:if test="${not empty sessionScope.loginUser and sessionScope.loginUser.empno == board.empno}">
                         <a href="${pageContext.request.contextPath}/BoardEditForm.do?idx=${board.idx}">수정</a>
                         <a href="${pageContext.request.contextPath}/BoardDeleteForm.do?idx=${board.idx}">삭제</a>

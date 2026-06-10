@@ -68,11 +68,17 @@
                 <tr>
                     <td><%= board.getIdx() %></td>
                     <td class="text-start">
-                        <a href="BoardDetail.do?idx=<%= board.getIdx() %>" class="board-title-link">
-                            <%= board.getSubject() %>
-                        </a>
+                        <span class="board-reply-indent" style="--reply-depth:<%= board.getDepth() %>"></span>
+                        <% if (board.getDepth() > 0) { %><span class="board-reply-marker">↳</span><% } %>
+                        <% if (board.isDeleted()) { %>
+                            <span class="board-deleted-title">삭제된 게시판입니다.</span>
+                        <% } else { %>
+                            <a href="BoardDetail.do?idx=<%= board.getIdx() %>" class="board-title-link">
+                                <%= board.getSubject() %>
+                            </a>
+                        <% } %>
                     </td>
-                    <td><%= (board.getEname() == null || board.getEname().isEmpty()) ? board.getEmpno() : board.getEname() %><% if (board.getDeptname() != null && !board.getDeptname().isEmpty()) { %> (<%= board.getDeptname() %>)<% } %></td>
+                    <td><% if (board.isDeleted()) { %>-<% } else { %><%= (board.getEname() == null || board.getEname().isEmpty()) ? board.getEmpno() : board.getEname() %><% if (board.getDeptname() != null && !board.getDeptname().isEmpty()) { %> (<%= board.getDeptname() %>)<% } %><% } %></td>
                     <td><%= board.getWritedate() %></td>
                     <td><%= board.getReadnum() %></td>
                 </tr>

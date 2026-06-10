@@ -19,6 +19,10 @@
 <main class="board-page">
     <h1>게시글 작성</h1>
     <form class="board-form" action="${pageContext.request.contextPath}/BoardWriteOk.do" method="post">
+        <c:if test="${not empty parentBoard}">
+            <input type="hidden" name="parentIdx" value="${parentBoard.idx}">
+            <p class="muted">답글 대상: <c:out value="${parentBoard.subject}" /></p>
+        </c:if>
         <label>제목
             <input type="text" name="subject" maxlength="100" required>
         </label>
