@@ -25,9 +25,23 @@
         <section class="board-editor" data-editor-mode="form">
             <div class="editor-toolbar">
                 <span class="editor-label">내용</span>
+                <button type="button" id="insertMapBtn" class="map-toggle-btn">지도 삽입</button>
             </div>
             <textarea name="content" id="contentInput" class="editor-source" required></textarea>
             <div id="contentEditor" class="content-editor" contenteditable="true" data-placeholder="내용을 입력하세요."></div>
+            <div id="mapPanel" class="map-panel editor-map-panel hidden">
+                <div id="placeSearchForm" class="place-search-form">
+                    <label for="keyword">장소 검색</label>
+                    <div class="place-search-row">
+                        <input type="text" id="keyword" placeholder="장소명을 입력하세요">
+                        <button type="button" id="placeSearchBtn">검색</button>
+                    </div>
+                </div>
+                <ul id="placesList" class="place-results"></ul>
+                <div id="map" class="map-box"></div>
+            </div>
+            <input type="hidden" name="lat" id="lat">
+            <input type="hidden" name="lng" id="lng">
         </section>
 
         <div class="actions">
@@ -38,6 +52,9 @@
 </main>
 
 <jsp:include page="/include/quickMenu.jsp" />
+<c:if test="${not empty kakaoMapKey}">
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapKey}&libraries=services"></script>
+</c:if>
 <script src="${pageContext.request.contextPath}/js/board-editor.js?v=<%=System.currentTimeMillis()%>"></script>
 </body>
 </html>

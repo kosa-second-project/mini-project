@@ -34,6 +34,7 @@ public class BoardDetailService implements Action {
             request.setAttribute("idx", idx);
             request.setAttribute("board", board);
             request.setAttribute("replyList", replyList);
+            BoardFormUtil.setKakaoMapKey(request);
 
             forward.setRedirect(false);
             forward.setPath("/WEB-INF/views/board/board_detail.jsp");
