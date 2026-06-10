@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.or.bit.action.Action;
 import kr.or.bit.action.ActionForward;
+import kr.or.bit.ajax.BoardListAjax;
 import kr.or.bit.service.board.BoardDeleteFormService;
 import kr.or.bit.service.board.BoardDeleteService;
 import kr.or.bit.service.board.BoardDetailService;
@@ -37,6 +38,9 @@ public class BoardController extends HttpServlet {
 
         if (urlCommand.equals("/BoardList.do")) {
             action = new BoardListService();
+            forward = action.execute(request, response);
+        } else if (urlCommand.equals("/BoardListAjax.do")) {
+            action = new BoardListAjax();
             forward = action.execute(request, response);
         } else if (urlCommand.equals("/BoardWriteForm.do")) {
             request.setAttribute("loginRequired", false);
