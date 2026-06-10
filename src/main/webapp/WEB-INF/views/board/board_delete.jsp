@@ -24,7 +24,7 @@
         </c:when>
         <c:otherwise>
             <p><strong><c:out value="${board.subject}" /></strong> 게시글을 삭제하시겠습니까?</p>
-            <p class="muted">작성 사원번호 ${board.empno}</p>
+            <p class="muted">작성자 <c:out value="${empty board.ename ? board.empno : board.ename}" /><c:if test="${not empty board.deptname}"> / <c:out value="${board.deptname}" /></c:if></p>
             <form class="board-form" action="${pageContext.request.contextPath}/BoardDeleteOk.do" method="post">
                 <input type="hidden" name="idx" value="${board.idx}">
 <!--                 <label>비밀번호

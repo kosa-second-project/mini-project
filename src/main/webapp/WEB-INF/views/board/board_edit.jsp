@@ -26,7 +26,7 @@
         <c:otherwise>
             <form class="board-form" action="${pageContext.request.contextPath}/BoardEditOk.do" method="post">
                 <input type="hidden" name="idx" value="${board.idx}">
-                <p class="muted">작성 사원번호 ${board.empno}</p>
+                <p class="muted">작성자 <c:out value="${empty board.ename ? board.empno : board.ename}" /><c:if test="${not empty board.deptname}"> / <c:out value="${board.deptname}" /></c:if></p>
 <!--                 <label>비밀번호
                     <input type="password" name="password" required>
                 </label> -->
