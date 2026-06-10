@@ -32,7 +32,7 @@
         <section class="board-editor" data-editor-mode="form">
             <div class="editor-toolbar">
                 <span class="editor-label">내용</span>
-                <button type="button" id="insertMapBtn" class="map-toggle-btn">지도 삽입</button>
+                <button type="button" id="insertMapBtn" class="map-toggle-btn"><i class="bi bi-geo-alt" aria-hidden="true"></i> 지도 추가</button>
             </div>
             <textarea name="content" id="contentInput" class="editor-source" required></textarea>
             <div id="contentEditor" class="content-editor" contenteditable="true" data-placeholder="내용을 입력하세요"></div>

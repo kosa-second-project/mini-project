@@ -3,6 +3,12 @@
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 
 <c:set var="loginEmpno" value="${sessionScope.loginUser.empno}" />
+<c:set var="loginName" value="${empty sessionScope.loginUser.ename ? sessionScope.loginUser.empno : sessionScope.loginUser.ename}" />
+<c:set var="loginDeptname" value="${sessionScope.loginUser.deptname}" />
+<c:set var="loginAvatarName" value="${loginName}" />
+<c:if test="${not empty sessionScope.loginUser.ename and fn:length(sessionScope.loginUser.ename) > 1}">
+    <c:set var="loginAvatarName" value="${fn:substring(sessionScope.loginUser.ename, 1, fn:length(sessionScope.loginUser.ename))}" />
+</c:if>
 <c:set var="boardIdx" value="${not empty board ? board.idx : idx}" />
 
 <section id="replySection" class="reply-section mt-5 pt-3">
@@ -15,9 +21,9 @@
             <form action="ReplyWrite.do" method="post" class="reply-write-form d-flex gap-3 mb-3 p-3 border rounded-2">
                 <input type="hidden" name="idx_fk" value="${boardIdx}">
 
-                <div class="reply-avatar"><c:out value="${loginEmpno}"/></div>
+                <div class="reply-avatar"><c:out value="${loginAvatarName}"/></div>
                 <div class="flex-grow-1 min-w-0">
-                    <div class="fw-bold small mb-2">사번 <c:out value="${loginEmpno}"/></div>
+                    <div class="fw-bold small mb-2"><c:out value="${loginName}"/><c:if test="${not empty loginDeptname}"> (<c:out value="${loginDeptname}"/>)</c:if></div>
                     <textarea name="content" rows="3" class="form-control reply-textarea" placeholder="댓글을 입력하세요" required></textarea>
                     <div class="d-flex justify-content-end mt-2">
                         <button type="submit" class="btn btn-primary btn-sm">등록</button>
@@ -34,12 +40,17 @@
         <c:choose>
             <c:when test="${not empty replyList}">
                 <c:forEach var="reply" items="${replyList}">
+                    <c:set var="replyName" value="${empty reply.ename ? reply.empno : reply.ename}" />
+                    <c:set var="replyAvatarName" value="${replyName}" />
+                    <c:if test="${not empty reply.ename and fn:length(reply.ename) > 1}">
+                        <c:set var="replyAvatarName" value="${fn:substring(reply.ename, 1, fn:length(reply.ename))}" />
+                    </c:if>
                     <article class="reply-item d-flex gap-3 py-3 border-bottom">
-                        <div class="reply-avatar"><c:out value="${reply.empno}"/></div>
+                        <div class="reply-avatar"><c:out value="${replyAvatarName}"/></div>
 
                         <div class="flex-grow-1 min-w-0">
                             <div class="d-flex align-items-baseline gap-2 mb-1">
-                                <strong class="small">사번 <c:out value="${reply.empno}"/></strong>
+                                <strong class="small"><c:out value="${replyName}"/><c:if test="${not empty reply.deptname}"> (<c:out value="${reply.deptname}"/>)</c:if></strong>
                                 <span class="text-muted small"><c:out value="${reply.writedate}"/></span>
                             </div>
 

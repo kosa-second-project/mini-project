@@ -23,10 +23,7 @@
                 <h1><c:out value="${board.subject}" /></h1>
                 <div class="meta">
                     <span>글 번호 ${board.idx}</span>
-                    <span>작성자 <c:out value="${empty board.ename ? board.empno : board.ename}" /></span>
-                    <c:if test="${not empty board.deptname}">
-                        <span>부서 <c:out value="${board.deptname}" /></span>
-                    </c:if>
+                    <span>작성자 <c:out value="${empty board.ename ? board.empno : board.ename}" /><c:if test="${not empty board.deptname}"> (<c:out value="${board.deptname}" />)</c:if></span>
                     <span>작성일 ${board.writedate}</span>
                     <span>조회수 ${board.readnum}</span>
                 </div>

@@ -206,6 +206,9 @@
 }
 
 .map-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     border: 1px solid var(--accent-color);
     border-radius: 999px;
     background: transparent;

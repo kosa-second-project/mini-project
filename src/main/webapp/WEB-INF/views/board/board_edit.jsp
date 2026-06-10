@@ -26,7 +26,7 @@
         <c:otherwise>
             <form class="board-form" action="${pageContext.request.contextPath}/BoardEditOk.do" method="post">
                 <input type="hidden" name="idx" value="${board.idx}">
-                <p class="muted">작성자 <c:out value="${empty board.ename ? board.empno : board.ename}" /><c:if test="${not empty board.deptname}"> / <c:out value="${board.deptname}" /></c:if></p>
+                <p class="muted">작성자 <c:out value="${empty board.ename ? board.empno : board.ename}" /><c:if test="${not empty board.deptname}"> (<c:out value="${board.deptname}" />)</c:if></p>
 <!--                 <label>비밀번호
                     <input type="password" name="password" required>
                 </label> -->
@@ -36,7 +36,7 @@
                 <section class="board-editor" data-editor-mode="form">
                     <div class="editor-toolbar">
                         <span class="editor-label">내용</span>
-                        <button type="button" id="insertMapBtn" class="map-toggle-btn">지도 삽입</button>
+                        <button type="button" id="insertMapBtn" class="map-toggle-btn"><i class="bi bi-geo-alt" aria-hidden="true"></i> 지도 추가</button>
                     </div>
                     <textarea name="content" id="contentInput" class="editor-source" required><c:out value="${board.content}" /></textarea>
                     <div id="contentEditor" class="content-editor" contenteditable="true" data-placeholder="내용을 입력하세요"></div>

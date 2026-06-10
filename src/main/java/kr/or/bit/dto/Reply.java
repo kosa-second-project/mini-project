@@ -13,6 +13,8 @@ import lombok.AllArgsConstructor;
 public class Reply {
     private int no;
     private int empno;
+    private String ename;
+    private String deptname;
     private String content;
     private Date writedate;
     private int idx_fk;
